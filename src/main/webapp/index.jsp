@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<title>Fact Checking</title>
@@ -30,8 +29,8 @@
 				<div class="navbar-header">
 					<!-- Logo -->
 					<div class="navbar-brand">
-						<a class="logo" href="index.html">
-							<img src="./img/logo-alt.png" alt="logo">
+						<a class="logo" href="https://www.ua.es/" target="_blank">
+							<img src="./img/logo.png" alt="logo">
 						</a>
 					</div>
 					<!-- /Logo -->
@@ -63,7 +62,7 @@
 		<div id="home" class="hero-area">
 
 			<!-- Backgound Image -->
-			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/home-background.jpg)"></div>
+			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/cta2-background.jpg)"></div>
 			<!-- /Backgound Image -->
 
 			<div class="home-wrapper">
@@ -94,9 +93,12 @@
 					<!-- footer logo -->
 					<div class="col-md-6">
 						<div class="footer-logo">
-							<a class="logo" href="index.html">
-								<img src="./img/logo.png" alt="logo">
-							</a>
+							<div class="logo" href="https://www.ua.es/" target="_blank">
+								<img src="./img/logo.png" alt="logo-ua">
+							</div>
+							<div class="logo-eps" href="https://eps.ua.es/" target="_blank">
+								<img src="./img/logo-eps.png" alt="logo-eps">
+							</div>
 						</div>
 					</div>
 					<!-- footer logo -->
@@ -134,8 +136,9 @@
 
 					<!-- copyright -->
 					<div class="col-md-8 col-md-pull-4">
+							<span>Helena Sánchez Jiménez | Proyecto de Fin de Grado | Escuela Politécnica Superior.</span>
 						<div class="footer-copyright">
-							<span>&copy; Copyright 2018. All Rights Reserved. | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com">Colorlib</a></span>
+							<span>&copy; Copyright 2018. Todos los derechos reservados. </span>
 						</div>
 					</div>
 					<!-- /copyright -->

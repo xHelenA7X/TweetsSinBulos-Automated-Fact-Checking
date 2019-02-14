@@ -226,12 +226,13 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 }
 
 .navbar-brand .logo {
-	margin-top: 10px;
+	margin-top: 5px;
 	display: inline-block;
 }
 
 .navbar-brand .logo > img {
-	max-height:30px;
+	max-height:40px;
+	background-color: #ABB9BD;
 }
 
 @media only screen and (max-width: 767px) {
@@ -655,11 +656,21 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 /* -- Footer Logo -- */
 .footer-logo  .logo {
 	margin-top: 20px;
-	display: inline-block;
 }
 
 .footer-logo  .logo > img {
-	max-height:30px;
+	float: left;	
+	max-height:50px;
+	border: 1px solid #D8DCDC;
+}
+
+.footer-logo  .logo-eps > img {
+	float: left;	
+	max-height:70px;
+	position: relative;
+  	left: 40px;
+	bottom: 20px;
+  	border: 1px solid #D8DCDC;
 }
 
 /* -- Footer Nav -- */
