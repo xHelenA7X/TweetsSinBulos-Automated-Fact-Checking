@@ -643,6 +643,18 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 	margin-top:40px;
 }
 
+.titulo{
+	display: inline-block;
+	margin-left: 30px;
+	font-size: 66px;
+    border-radius: 24px 24px 24px 24px;
+	-moz-border-radius: 24px 24px 24px 24px;
+	-webkit-border-radius: 24px 24px 24px 24px;
+	border: 1px solid grey;
+	padding: 11px;
+	
+}
+
 /*------------------------------------*\
 	Footer
 \*------------------------------------*/
@@ -660,7 +672,7 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 
 .footer-logo  .logo > img {
 	float: left;	
-	max-height:50px;
+	max-height:70px;
 	border: 1px solid #D8DCDC;
 }
 
@@ -669,7 +681,7 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 	max-height:70px;
 	position: relative;
   	left: 40px;
-	bottom: 20px;
+  	margin: right;
   	border: 1px solid #D8DCDC;
 }
 
@@ -766,6 +778,13 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 
 .footer-social li a.linkedin {
 	background-color:#007bb5;
+}
+
+.col-md-8 > img{
+	 width: 25%;
+     height: auto;
+     margin-left:30px;
+	 margin-bottom: 70px;
 }
 
 /*------------------------------------*\

@@ -1,10 +1,12 @@
+<%@page contentType="text/html"%> 
+<%@page pageEncoding="UTF-8"%> 
 <!DOCTYPE html>
 <html lang="es">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>Fact Checking</title>
+		<title>TweetCheck</title>
 
 		<!-- Google font -->
 		<link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
@@ -14,6 +16,7 @@
 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
 		<link rel="stylesheet" href="css/font-awesome.min.css">
 		<link type="text/css" rel="stylesheet" href="css/style.css"/>
+		<link rel="icon" type="image/png" href="./img/pinocho-logo.png" />
 		
 		<!-- JS -->
 	    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -62,17 +65,19 @@
 		<div id="home" class="hero-area">
 
 			<!-- Backgound Image -->
-			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/cta2-background.jpg)"></div>
+			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/course02.jpg)"></div>
 			<!-- /Backgound Image -->
 
 			<div class="home-wrapper">
 				<div class="container">
 					<div class="row">
 						<div class="col-md-8">
-							<h1 class="white-text">Edusite Free Online Training Courses</h1>
+							<img src="./img/pinocho-logo.png" alt="logo-pinocho">
+							<div class="white-text titulo"><p>TweetCheck<p></div>
+							<h1 class="white-text">Verificador de hechos automatizado</h1>
 							<div class="webdesigntuts-workshop">
 								<form action="" method="">		    
-									<input type="search" placeholder="Tweet URL">		    	
+									<input type="search" placeholder="Introduce la URL del tweet">		    	
 									<a class="main-button icon-button" href="#">Verificar</a>
 								</form>
 							</div>
