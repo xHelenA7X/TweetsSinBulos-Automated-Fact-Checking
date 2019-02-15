@@ -46,8 +46,24 @@ function analizaUrl(url){
 	var re = new RegExp("https://twitter.com/"+"[0-z]+"+"/status/"+"[0-9]+");
 	return re.test(url);
 }
+function twitterAPI(idTweet){
+	
+}
+function generaInforme(texto){
+	fetch('generainforme')
+	 .then(function(response){
+		return response.json();
+	})
+	.then(function(responseAsJson){	
+		var output;
+		
+	})
+	.catch(function(error){
+		alert("Ha ocurrido un error generando el informe: " + error);
+	})
+}
 
-function ObtenTuit(){
+function obtenTuit(){
 	var url = $("input[name='buscador']").value;
 	
 	if(url == ""){
@@ -56,7 +72,16 @@ function ObtenTuit(){
 	else{
 		var valido = analizaUrl(url);
 		if(valido){
-		
+			var i = url.lastIndexOf('/');
+			var idTweet = "";
+			for(var j = i+1; j < url.length; j++){
+				idTweet += url[j];
+				//var texto = TwitterAPI(idTweet);
+				//Llamamos a MainServlet
+				var texto = "Hola mundo";
+				generaInforme(texto); 
+			}
+			console.log(idTweet);
 		}
 		else{
 			alert("Introduzca una URL de tweet válida, formato: https://twitter.com/\"usuario\"/status/\"código tuit\"");
@@ -69,7 +94,7 @@ function ObtenTuit(){
 */
 function init(){
 	var verificar_btn= $(".main-button");
-	verificar_btn.addEventListener("click",ObtenTuit);
+	verificar_btn.addEventListener("click",obtenTuit);
 	
 }
 
