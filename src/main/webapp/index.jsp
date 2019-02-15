@@ -65,7 +65,7 @@
 		<div id="home" class="hero-area">
 
 			<!-- Backgound Image -->
-			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/course02.jpg)"></div>
+			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/bcktwitter.jpg)"></div>
 			<!-- /Backgound Image -->
 
 			<div class="home-wrapper">
@@ -74,10 +74,10 @@
 						<div class="col-md-8">
 							<img src="./img/pinocho-logo.png" alt="logo-pinocho">
 							<div class="white-text titulo"><p>TweetCheck<p></div>
-							<h1 class="white-text">Verificador de hechos automatizado</h1>
+							<h1 class="white-text">Verifica tweets en tiempo real.</h1>
 							<div class="webdesigntuts-workshop">
 								<form action="" method="">		    
-									<input type="search" placeholder="Introduce la URL del tweet">		    	
+									<input name="buscador" type="url" placeholder="Introduce la URL del tweet">		    	
 									<a class="main-button icon-button" href="#">Verificar</a>
 								</form>
 							</div>
@@ -98,11 +98,11 @@
 					<!-- footer logo -->
 					<div class="col-md-6">
 						<div class="footer-logo">
-							<div class="logo" href="https://www.ua.es/" target="_blank">
-								<img src="./img/logo.png" alt="logo-ua">
+							<div class="logo">
+								<a href="https://www.ua.es/" target="_blank"><img src="./img/logo.png" alt="logo-ua"></a>
 							</div>
-							<div class="logo-eps" href="https://eps.ua.es/" target="_blank">
-								<img src="./img/logo-eps.png" alt="logo-eps">
+							<div class="logo-eps">
+								<a href="https://eps.ua.es/" target="_blank"><img src="./img/logo-eps.png" alt="logo-eps"></a>
 							</div>
 						</div>
 					</div>

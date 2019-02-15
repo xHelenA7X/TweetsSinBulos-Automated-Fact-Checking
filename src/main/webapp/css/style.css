@@ -670,19 +670,17 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 	margin-top: 20px;
 }
 
-.footer-logo  .logo > img {
+.footer-logo  .logo img {
 	float: left;	
 	max-height:70px;
-	border: 1px solid #D8DCDC;
 }
 
-.footer-logo  .logo-eps > img {
+.footer-logo  .logo-eps img {
 	float: left;	
 	max-height:70px;
 	position: relative;
   	left: 40px;
   	margin: right;
-  	border: 1px solid #D8DCDC;
 }
 
 /* -- Footer Nav -- */
