@@ -50,12 +50,14 @@ function twitterAPI(idTweet){
 	
 }
 function generaInforme(texto){
-	fetch('generainforme')
+	console.log(texto);
+	fetch('generainforme?texto='+texto)
 	 .then(function(response){
 		return response.json();
 	})
 	.then(function(responseAsJson){	
-		var output;
+		console.log(responseAsJson.result);
+		alert("Todo ok");
 		
 	})
 	.catch(function(error){
@@ -76,12 +78,11 @@ function obtenTuit(){
 			var idTweet = "";
 			for(var j = i+1; j < url.length; j++){
 				idTweet += url[j];
-				//var texto = TwitterAPI(idTweet);
-				//Llamamos a MainServlet
-				var texto = "Hola mundo";
-				generaInforme(texto); 
 			}
-			console.log(idTweet);
+			//var texto = TwitterAPI(idTweet);
+			//Llamamos a MainServlet
+			var texto = "Hola mundo";
+			generaInforme(texto);
 		}
 		else{
 			alert("Introduzca una URL de tweet válida, formato: https://twitter.com/\"usuario\"/status/\"código tuit\"");

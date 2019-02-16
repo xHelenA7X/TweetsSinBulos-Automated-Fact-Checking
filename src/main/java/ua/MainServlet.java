@@ -2,6 +2,7 @@ package ua;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -11,19 +12,52 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.annolab.tt4j.TokenHandler;
+import org.annolab.tt4j.TreeTaggerWrapper;
 
 
-/* Algunas versiones del plugin de Jetty para Maven fallan si no
-   hay al menos una clase en el directorio java. Creamos esta clase
-   vacía para evitarlo. */
-@WebServlet(name="generaInforme",urlPatterns={"/generainforme"})
+@WebServlet(name="generainforme",urlPatterns={"/generainforme"})
 public class MainServlet extends HttpServlet{
 	private static final Logger log = Logger.getLogger(MainServlet.class.getName());
+	  
+		private void JSON(HttpServletResponse response) throws ServletException, IOException{
+			 response.setContentType("application/json");
+			 response.setCharacterEncoding("utf-8");
+			 String output = "";
+			 int error = HttpServletResponse.SC_OK;	 
+			 output = "{\"result\": []}"; 
+			 response.setStatus(error);
+			 PrintWriter out = response.getWriter();
+			 out.println(output);
+		  }
+		private void anotaTexto(String texto){
+			TreeTaggerWrapper tt = new TreeTaggerWrapper<String>();
+			try {
+				tt.setModel("spanish.par");
+				
+				tt.setHandler(new TokenHandler<String>() {
+                    public void token(String token, String pos, String lemma) {
+                            log.warning(token + "\t" + pos + "\t" + lemma);
+                    }
+				});
+				
+				tt.process(Arrays.asList(new String[]{"Fuentes","confirman","que","los","extraterrestres","existen",".",}));
+				
+			} catch (Exception e) {
+				log.warning("Excepcion: " + e);
+			}
+			finally{
+				tt.destroy();
+			}
+		}
+	  
 	
-	@Override
-	  public void doGet(HttpServletRequest req, HttpServletResponse resp)
-	              throws IOException, ServletException { 
-	    log.warning("Hola mundo");
-	    String texto = req.getParameter("texto");
-	  }
+		  @Override
+		  public void doGet(HttpServletRequest req, HttpServletResponse resp)
+		              throws IOException, ServletException { 
+		    String texto = req.getParameter("texto");
+		    log.warning("Hola mundo: " + texto);
+		    anotaTexto(texto);
+		    JSON(resp);
+		  }
 }
