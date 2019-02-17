@@ -46,26 +46,20 @@ function analizaUrl(url){
 	var re = new RegExp("https://twitter.com/"+"[0-z]+"+"/status/"+"[0-9]+");
 	return re.test(url);
 }
-function twitterAPI(idTweet){
-	
-}
-function generaInforme(texto){
-	console.log(texto);
-	fetch('generainforme?texto='+texto)
+function ProcesaAfirmacion(texto){
+	fetch('procesaafirmacion?texto='+texto)
 	 .then(function(response){
 		return response.json();
 	})
 	.then(function(responseAsJson){	
-		console.log(responseAsJson.result);
 		alert("Todo ok");
-		
 	})
 	.catch(function(error){
-		alert("Ha ocurrido un error generando el informe: " + error);
+		alert("Ha ocurrido un error procesando la afirmacion: " + error);
 	})
 }
 
-function obtenTuit(){
+function extraerTweet(){
 	var url = $("input[name='buscador']").value;
 	
 	if(url == ""){
@@ -73,16 +67,35 @@ function obtenTuit(){
 	}
 	else{
 		var valido = analizaUrl(url);
+		
 		if(valido){
 			var i = url.lastIndexOf('/');
 			var idTweet = "";
+			//De la url introducida extraemos el id del tuit
 			for(var j = i+1; j < url.length; j++){
 				idTweet += url[j];
 			}
-			//var texto = TwitterAPI(idTweet);
-			//Llamamos a MainServlet
-			var texto = "Hola mundo";
-			generaInforme(texto);
+
+			//Extraemos el texto del tuit
+			fetch('extraetweet?id='+idTweet)
+			.then(function(response){
+				return response.json();
+			})
+			.then(function(responseAsJson){	
+				console.log(responseAsJson);
+				if("error" in responseAsJson){
+					alert("Ha ocurrido un error extrayendo el tuit: " + error);
+				}
+				else{
+					var texto = responseAsJson.text;
+					console.log(texto);
+					//una vez extraido, vamos al Procesamiento del Lenguaje Natural
+					ProcesaAfirmacion(texto);
+				}
+			})
+			.catch(function(error){
+				alert("Ha ocurrido un error extrayendo el tuit: " + error);
+			})
 		}
 		else{
 			alert("Introduzca una URL de tweet válida, formato: https://twitter.com/\"usuario\"/status/\"código tuit\"");
@@ -95,7 +108,7 @@ function obtenTuit(){
 */
 function init(){
 	var verificar_btn= $(".main-button");
-	verificar_btn.addEventListener("click",obtenTuit);
+	verificar_btn.addEventListener("click",extraerTweet);
 	
 }
 
