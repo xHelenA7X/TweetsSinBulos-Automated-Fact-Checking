@@ -20,21 +20,33 @@ import org.annolab.tt4j.TreeTaggerWrapper;
 public class Afirmacion extends HttpServlet{
 	private static final Logger log = Logger.getLogger(Afirmacion.class.getName());
 	  
-	private void JSON(HttpServletResponse response) throws ServletException, IOException{
+	private void JSON(HttpServletResponse response, String texto) throws ServletException, IOException{
 		 response.setContentType("application/json");
 		 response.setCharacterEncoding("utf-8");
 		 String output = "";
 		 int error = HttpServletResponse.SC_OK;	 
-		 output = "{\"result\": []}"; 
+		 if(texto != ""){
+			 output = "{\"result\": [\""+texto+"\"]}"; 
+		 }
+		 else{
+			 output = "{\"error\": [\"No hay texto asociado."+"\"]}";
+		 }
+		 
 		 response.setStatus(error);
 		 PrintWriter out = response.getWriter();
 		 out.println(output);
 	}
 	
-	private void anotaTexto(String texto){
+	private void anotaTexto(String[] arrayTexto, String idioma){
 		TreeTaggerWrapper tt = new TreeTaggerWrapper<String>();
 		try {
-			tt.setModel("spanish.par");
+			
+			switch(idioma){
+			case "en":
+				tt.setModel("english.par");
+			default:
+				tt.setModel("spanish.par");
+			}
 			
 			tt.setHandler(new TokenHandler<String>() {
                 public void token(String token, String pos, String lemma) {
@@ -42,10 +54,10 @@ public class Afirmacion extends HttpServlet{
                 }
 			});
 			
-			tt.process(Arrays.asList(new String[]{"Fuentes","confirman","que","los","extraterrestres","existen",".",}));
+			tt.process(Arrays.asList(arrayTexto));
 			
 		} catch (Exception e) {
-			log.warning("Excepcion: " + e);
+			log.warning("Excepcion: " + e.toString());
 		}
 		finally{
 			tt.destroy();
@@ -56,7 +68,17 @@ public class Afirmacion extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException { 
 	   String texto = req.getParameter("texto");
-	   anotaTexto(texto);
-	   JSON(resp);
+	   String idioma = req.getParameter("idioma");
+	   if(texto != ""){
+		   texto = texto.trim();
+		   texto = texto.replace(",", "");
+		   texto = texto.replace(".", "");
+		   texto = texto.replace(":", "");
+		   texto = texto.replace(";", "");
+		   texto = texto.replace("#", "");
+		   String []arrayTexto = texto.split(" ");
+		   anotaTexto(arrayTexto,idioma);
+	   }
+	   JSON(resp,texto);
 	}
 }

@@ -10,12 +10,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import twitter4j.HashtagEntity;
 import twitter4j.JSONArray;
 import twitter4j.JSONObject;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
 
 @WebServlet(name="extraetweet",urlPatterns={"/extraetweet"})
@@ -31,6 +33,26 @@ public class Tweet extends HttpServlet{
 			 response.setStatus(error);
 			 PrintWriter out = response.getWriter();
 			 out.println(output);
+		}
+		
+		private String quitaUrls(String texto){
+			String nuevoTexto = "";
+			String[] arrayTexto = texto.split(" ");
+			
+			for(int i = 0;i < arrayTexto.length; i++){
+				if(arrayTexto[i].contains("http")){
+					i++;
+				}
+				else{
+					if(i != arrayTexto.length -1){
+						nuevoTexto+= arrayTexto[i] + " ";
+					}
+					else{
+						nuevoTexto+= arrayTexto[i];
+					}
+				}
+			}
+			return nuevoTexto;
 		}
 	
 		@Override
@@ -49,6 +71,7 @@ public class Tweet extends HttpServlet{
 		    long id_long = Long.parseLong(id);
 		    String salida = "";
 		    JSONObject json = new JSONObject();
+		    boolean existe_url=false;
 		    
 		    try {
 				Status status = tw.showStatus(id_long);
@@ -57,13 +80,41 @@ public class Tweet extends HttpServlet{
 				//json.put("userMentionEntities", status.getUserMentionEntities());
 				json.put("userName", status.getUser().getName());
 				json.put("userLocation", status.getUser().getLocation());
-				json.put("text", status.getText());
 				json.put("tweetLocation", status.getGeoLocation());
-				//json.put("url", status.getURLEntities().toString());
-				json.put("contributors", status.getContributors());
-				//json.put("hastagh", status.getHashtagEntities());
+				URLEntity[] urls = status.getURLEntities();
+				if(urls != null){
+					existe_url = true;
+					JSONArray arrayUrls = new JSONArray();
+					for(int i = 0; i < urls.length; i++){
+						JSONObject item = new JSONObject();
+						item.put("url"+(i),urls[i].getExpandedURL());
+						arrayUrls.put(item);
+					}
+					json.put("urls", arrayUrls);
+				}
+				//json.put("contributors", status.getContributors());
+				HashtagEntity[] hashtags = status.getHashtagEntities();
+				
+				if(hashtags != null){
+					JSONArray arrayHashtags = new JSONArray();
+					for(int i = 0; i < hashtags.length; i++){
+						JSONObject item = new JSONObject();
+						item.put("hastagh"+(i), hashtags[i].getText());
+						arrayHashtags.put(item);
+					}
+					json.put("hashtags", arrayHashtags);
+				}
 				//json.put("media", status.getMediaEntities()); Esto es importante
 				json.put("languaje", status.getLang());
+				
+				String texto;
+				if(existe_url){
+					texto = quitaUrls(status.getText().replace("#", ""));
+				}
+				else{
+					texto = status.getText().replace("#", "");
+				}
+				json.put("text", texto);
 /**
 				JSONArray array = new JSONArray();
 				JSONObject item = new JSONObject();
@@ -73,8 +124,7 @@ public class Tweet extends HttpServlet{
 				array.add(item);
 
 				json.put("course", array);
-**/			
-				log.warning("status: " + status);
+**/				
 			} catch (TwitterException e) {
 				json.put("error", e.getErrorMessage());
 			}

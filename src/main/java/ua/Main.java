@@ -1,10 +1,12 @@
 package ua;
 
 import java.sql.*;
+import java.util.logging.Logger;
 
 
 
 public class Main {
+	private static final Logger log = Logger.getLogger(Main.class.getName());
 	public String[] tratarFicheroEntrada(){
 		String []arrayTexto = null;
 		try
@@ -36,13 +38,13 @@ public class Main {
 		return arrayTexto;
 	}
 	
-	public void printArray(String[] arrayTexto){
+	public static void printArray(String[] arrayTexto){
 		if(arrayTexto != null){
 			for(int i = 0; i < arrayTexto.length; i++){
-				System.out.println("Posicion " + i + ": " + arrayTexto[i]);
+				log.warning("Posicion " + i + ": " + arrayTexto[i]);
 			}
 		}else{
-			System.out.println("Nada que leer.");
+			log.warning("Nada que leer.");
 		}
 	}
 	
