@@ -1,4 +1,4 @@
-package ua;
+package ua.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,8 +17,8 @@ import org.annolab.tt4j.TreeTaggerWrapper;
 
 
 @WebServlet(name="procesaafirmacion",urlPatterns={"/procesaafirmacion"})
-public class Afirmacion extends HttpServlet{
-	private static final Logger log = Logger.getLogger(Afirmacion.class.getName());
+public class AfirmacionController extends HttpServlet{
+	private static final Logger log = Logger.getLogger(AfirmacionController.class.getName());
 	  
 	private void JSON(HttpServletResponse response, String texto) throws ServletException, IOException{
 		 response.setContentType("application/json");

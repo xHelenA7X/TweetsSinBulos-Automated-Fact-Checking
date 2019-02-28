@@ -46,6 +46,26 @@ function analizaUrl(url){
 	var re = new RegExp("https://twitter.com/"+"[0-z]+"+"/status/"+"[0-9]+");
 	return re.test(url);
 }
+function ProcesaAfirmacion(texto,idioma){
+	console.log('procesaafirmacion?idioma='+idioma+'&texto='+texto);
+	fetch('procesaafirmacion?texto='+texto+'&idioma='+idioma)
+	 .then(function(response){
+		return response.json();
+	})
+	.then(function(responseAsJson){	
+		if("error" in responseAsJson){
+			alert("Error procesando la afirmacion: " + responseAsJson.error);
+		}
+		else{
+			alert("Todo ok");
+			console.log(responseAsJson.result);
+		}
+		
+	})
+	.catch(function(error){
+		alert("Ha ocurrido un error procesando la afirmacion: " + error);
+	})
+}
 
 function extraerTweet(){
 	var url = $("input[name='buscador']").value;
@@ -79,6 +99,8 @@ function extraerTweet(){
 					var idioma = responseAsJson.languaje;
 					console.log(texto);
 					console.log(idioma);
+					//una vez extraido, vamos al Procesamiento del Lenguaje Natural
+					ProcesaAfirmacion(texto,idioma);
 				}
 			})
 			.catch(function(error){

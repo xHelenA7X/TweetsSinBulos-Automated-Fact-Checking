@@ -1,7 +1,8 @@
-package ua;
+package ua.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.annolab.tt4j.TokenHandler;
+import org.annolab.tt4j.TreeTaggerWrapper;
 
 import twitter4j.HashtagEntity;
 import twitter4j.JSONArray;
@@ -21,8 +25,37 @@ import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
 
 @WebServlet(name="extraetweet",urlPatterns={"/extraetweet"})
-public class Tweet extends HttpServlet{
-	private static final Logger log = Logger.getLogger(Tweet.class.getName());
+public class TweetController extends HttpServlet{
+	private static final Logger log = Logger.getLogger(TweetController.class.getName());
+		
+	private void anotaTexto(String[] arrayTexto, String idioma){
+			TreeTaggerWrapper tt = new TreeTaggerWrapper<String>();
+			try {
+				
+				switch(idioma){
+				case "en":
+					tt.setModel("english.par");
+				default:
+					tt.setModel("spanish.par");
+				}
+				
+				tt.setHandler(new TokenHandler<String>() {
+	                public void token(String token, String pos, String lemma) {
+	                        log.warning(token + "\t" + pos + "\t" + lemma);
+	                }
+				});
+				
+				tt.process(Arrays.asList(arrayTexto));
+				
+			} catch (Exception e) {
+				log.warning("Excepcion: " + e.toString());
+			}
+			finally{
+				tt.destroy();
+			}
+				
+				
+		}
 	
 		private void JSON(HttpServletResponse response, String salida) throws ServletException, IOException{
 			 response.setContentType("application/json");
@@ -105,7 +138,8 @@ public class Tweet extends HttpServlet{
 					json.put("hashtags", arrayHashtags);
 				}
 				//json.put("media", status.getMediaEntities()); Esto es importante
-				json.put("languaje", status.getLang());
+				String idioma = status.getLang();
+				json.put("languaje", idioma);
 				
 				String texto;
 				if(existe_url){
@@ -115,6 +149,18 @@ public class Tweet extends HttpServlet{
 					texto = status.getText().replace("#", "");
 				}
 				json.put("text", texto);
+				
+				if(texto != ""){
+				   texto = texto.trim();
+				   texto = texto.replace(",", "");
+				   texto = texto.replace(".", "");
+				   texto = texto.replace(":", "");
+				   texto = texto.replace(";", "");
+				   texto = texto.replace("#", "");
+				   String []arrayTexto = texto.split(" ");
+				   anotaTexto(arrayTexto,idioma);
+				}
+				
 /**
 				JSONArray array = new JSONArray();
 				JSONObject item = new JSONObject();
