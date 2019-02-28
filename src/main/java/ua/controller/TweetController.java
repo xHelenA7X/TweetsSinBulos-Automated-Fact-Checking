@@ -149,6 +149,7 @@ public class TweetController extends HttpServlet{
 					texto = status.getText().replace("#", "");
 				}
 				json.put("text", texto);
+				json.put("UrlRedirecciona", "/salida");
 				
 				if(texto != ""){
 				   texto = texto.trim();
@@ -177,4 +178,5 @@ public class TweetController extends HttpServlet{
 			salida = json.toString();
 		    JSON(resp, salida);
 	  }
+		
 }
