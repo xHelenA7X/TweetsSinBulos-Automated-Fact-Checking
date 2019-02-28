@@ -61,7 +61,7 @@ function extraerTweet(){
 				}
 				else{
                     console.log(responseAsJson);
-                    window.location.href=responseAsJson.UrlRedirecciona;
+                   // window.location.href=responseAsJson.UrlRedirecciona;
 				}
 			})
 			.catch(function(error){

@@ -143,7 +143,7 @@
 					<div class="col-md-8 col-md-pull-4">
 							<span>Helena Sánchez Jiménez | Proyecto de Fin de Grado | Escuela Politécnica Superior.</span>
 						<div class="footer-copyright">
-							<span>&copy; Copyright 2018. Todos los derechos reservados. </span>
+							<span>&copy; Copyright 2019. Todos los derechos reservados. </span>
 						</div>
 					</div>
 					<!-- /copyright -->

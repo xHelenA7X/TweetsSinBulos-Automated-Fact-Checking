@@ -59,34 +59,92 @@
 
 			</div>
 		</header>
+			<!-- Call To Action -->
+			<div id="cta" class="section">
+
+					<!-- Backgound Image -->
+					<div class="bg-image bg-parallax overlay" style="background-image:url(./img/libros.jpg)"></div>
+					<!-- /Backgound Image -->
+		
+					<!-- container -->
+					<div class="container">
+		
+						<!-- row -->
+						<div class="row">
+		
+							<div class="col-md-6">
+								<h2 class="white-text">Resultados</h2>
+								<a class="main-button icon-button" href="#">Si lo prefieres, consulta los resultados en modo texto.</a>
+							</div>
+		
+						</div>
+						<!-- /row -->
+		
+					</div>
+					<!-- /container -->
+		
+				</div>
+				<!-- /Call To Action -->
+		
 		<!-- /Header -->
-
-		<!-- Home -->
-		<div id="home" class="hero-area">
-
-			<!-- Backgound Image -->
-			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/bcktwitter.jpg)"></div>
-			<!-- /Backgound Image -->
-
-			<div class="home-wrapper">
+		<div id="about" class="section">
+				<!-- container -->
 				<div class="container">
+	
+					<!-- row -->
 					<div class="row">
-						<div class="col-md-8">
-							<img src="./img/pinocho-logo.png" alt="logo-pinocho">
-							<div class="white-text titulo"><p>TweetCheck<p></div>
-							<h1 class="white-text">Verifica tweets en tiempo real.</h1>
-							<div class="webdesigntuts-workshop">
-								<form action="" method="">		    
-									<input name="buscador" type="url" placeholder="Introduce la URL del tweet">		    	
-									<a class="main-button icon-button" href="#">Verificar</a>
-								</form>
+	
+						<div class="col-md-6">
+							<div class="section-header">
+								<h2>Welcome to Edusite</h2>
+								<p class="lead">Libris vivendo eloquentiam ex ius, nec id splendide abhorreant.</p>
+							</div>
+	
+							<!-- feature -->
+							<div class="feature">
+								<i class="feature-icon fa fa-flask"></i>
+								<div class="feature-content">
+									<h4>Afirmación analizada</h4>
+									<p>Ceteros fuisset mei no, soleat epicurei adipiscing ne vis. Et his suas veniam nominati.</p>
+								</div>
+							</div>
+							<!-- /feature -->
+	
+							<!-- feature -->
+							<div class="feature">
+								<i class="feature-icon fa fa-users"></i>
+								<div class="feature-content">
+									<h4>Expert Teachers</h4>
+									<p>Ceteros fuisset mei no, soleat epicurei adipiscing ne vis. Et his suas veniam nominati.</p>
+								</div>
+							</div>
+							<!-- /feature -->
+	
+							<!-- feature -->
+							<div class="feature">
+								<i class="feature-icon fa fa-comments"></i>
+								<div class="feature-content">
+									<h4>Community</h4>
+									<p>Ceteros fuisset mei no, soleat epicurei adipiscing ne vis. Et his suas veniam nominati.</p>
+								</div>
+							</div>
+							<!-- /feature -->
+	
+						</div>
+	
+						<div class="col-md-6">
+							<div class="about-img">
+								<img src="./img/about.png" alt="">
 							</div>
 						</div>
+	
 					</div>
+					<!-- row -->
+	
 				</div>
+				<!-- container -->
 			</div>
 
-		</div>
 		<footer id="footer" class="section">
 
 			<!-- container -->
@@ -143,7 +201,7 @@
 					<div class="col-md-8 col-md-pull-4">
 							<span>Helena Sánchez Jiménez | Proyecto de Fin de Grado | Escuela Politécnica Superior.</span>
 						<div class="footer-copyright">
-							<span>&copy; Copyright 2018. Todos los derechos reservados. </span>
+							<span>&copy; Copyright 2019. Todos los derechos reservados. </span>
 						</div>
 					</div>
 					<!-- /copyright -->
