@@ -73,7 +73,7 @@
 						<div class="row">
 		
 							<div class="col-md-6">
-								<h2 class="white-text">Resultados</h2>
+                                <h2 class="white-text">Resultados</h2>
 								<a class="main-button icon-button" href="#">Si lo prefieres, consulta los resultados en modo texto.</a>
 							</div>
 		
@@ -96,15 +96,15 @@
 	
 						<div class="col-md-6">
 							<div class="section-header">
-								<h2>Welcome to Edusite</h2>
-								<p class="lead">Libris vivendo eloquentiam ex ius, nec id splendide abhorreant.</p>
+								<h2>Afirmación analizada:</h2>
+								<p class="lead">${textoTweet}</p>
 							</div>
 	
 							<!-- feature -->
 							<div class="feature">
 								<i class="feature-icon fa fa-flask"></i>
 								<div class="feature-content">
-									<h4>Afirmación analizada</h4>
+									<h4>Resultado</h4>
 									<p>Ceteros fuisset mei no, soleat epicurei adipiscing ne vis. Et his suas veniam nominati.</p>
 								</div>
 							</div>
@@ -124,7 +124,7 @@
 							<div class="feature">
 								<i class="feature-icon fa fa-comments"></i>
 								<div class="feature-content">
-									<h4>Community</h4>
+									<h4>¿Qué dice la comunidad al respecto?</h4>
 									<p>Ceteros fuisset mei no, soleat epicurei adipiscing ne vis. Et his suas veniam nominati.</p>
 								</div>
 							</div>

@@ -42,34 +42,8 @@ function extraerTweet(){
 	else{
 		var valido = analizaUrl(url);
 		
-		if(valido){
-			var i = url.lastIndexOf('/');
-			var idTweet = "";
-			//De la url introducida extraemos el id del tuit
-			for(var j = i+1; j < url.length; j++){
-				idTweet += url[j];
-			}
-
-			//Extraemos el texto del tuit
-			fetch('extraetweet?id='+idTweet)
-			.then(function(response){
-				return response.json();
-			})
-			.then(function(responseAsJson){	
-				if("error" in responseAsJson){
-					alert("Ha ocurrido un error extrayendo el tuit: " + error);
-				}
-				else{
-                    console.log(responseAsJson);
-                   // window.location.href=responseAsJson.UrlRedirecciona;
-				}
-			})
-			.catch(function(error){
-				alert("Ha ocurrido un error extrayendo el tuit: " + error);
-			})
-		}
-		else{
-			alert("Introduzca una URL de tweet válida, formato: https://twitter.com/\"usuario\"/status/\"código tuit\"");
+		if(!valido){
+		    alert("Introduzca una URL de tweet válida, formato: https://twitter.com/\"usuario\"/status/\"código tuit\"");
 		}
 	}
 }

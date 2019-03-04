@@ -9,20 +9,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import ua.util.DbUtil;
-import ua.model.Afirmacion;;
+import ua.model.Tweet;
 
-public class AfirmacionDao {
+public class TweetDao {
 
     private Connection connection;
 
-    public AfirmacionDao() {
+    public TweetDao() {
         connection = DbUtil.getConnection();
     }
 
-    public void addAfirmacion(Afirmacion af) {
+    public void addTweet(Tweet af) {
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("insert into Afirmacion(autor,texto,veracidad,fecha_registro) values (?, ?, ?, ? )");
+                    .prepareStatement("insert into Tweet(autor,texto,veracidad,fecha_registro) values (?, ?, ?, ? )");
             // Parameters start with 1
             preparedStatement.setString(1, af.getAutor());
             preparedStatement.setString(2, af.getTexto());
@@ -35,12 +35,12 @@ public class AfirmacionDao {
         }
     }
 
-    public void deleteAfirmacion(int idAfirmacion) {
+    public void deleteTweet(int idTweet) {
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("delete from Afirmacion where idAfirmacion=?");
+                    .prepareStatement("delete from Tweet where idTweet=?");
             // Parameters start with 1
-            preparedStatement.setInt(1, idAfirmacion);
+            preparedStatement.setInt(1, idTweet);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -48,17 +48,17 @@ public class AfirmacionDao {
         }
     }
 
-    public void updateAfirmacion(Afirmacion af) {
+    public void updateTweet(Tweet af) {
         try {
             PreparedStatement preparedStatement = connection
-            		.prepareStatement("update Afirmacion set autor=?, texto=?, veracidad=?, fecha_registro=?" +
-                            "where idAfirmacion=?");
+            		.prepareStatement("update Tweet set autor=?, texto=?, veracidad=?, fecha_registro=?" +
+                            "where idTweet=?");
             // Parameters start with 1
             preparedStatement.setString(1, af.getAutor());
             preparedStatement.setString(2, af.getTexto());
             preparedStatement.setString(3, af.getVeracidad());
             preparedStatement.setString(4, af.getFecha_registro());
-            preparedStatement.setInt(5, af.getidAfirmacion());
+          //  preparedStatement.setInt(5, af.getidTweet());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -66,37 +66,37 @@ public class AfirmacionDao {
         }
     }
 
-    public List<Afirmacion> getAllUsers() {
-        List<Afirmacion> afirmaciones = new ArrayList<Afirmacion>();
+    public List<Tweet> getAllUsers() {
+        List<Tweet> Tweetes = new ArrayList<Tweet>();
         try {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from Afirmacion");
+            ResultSet rs = statement.executeQuery("select * from Tweet");
             while (rs.next()) {
-                Afirmacion af = new Afirmacion();
-                af.setidAfirmacion((rs.getInt("idAfirmacion")));
+                Tweet af = new Tweet();
+              //  af.setidTweet((rs.getInt("idTweet")));
                 af.setAutor(rs.getString("autor"));
                 af.setTexto(rs.getString("texto"));
                 af.setVeracidad(rs.getString("veracidad"));
                 af.setFecha_registro(rs.getString("fecha_registro"));
-                afirmaciones.add(af);
+                Tweetes.add(af);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return afirmaciones;
+        return Tweetes;
     }
 
-    public Afirmacion getAfirmacionById(int afirmacionId) {
-    	Afirmacion af = new Afirmacion();
+    public Tweet getTweetById(int TweetId) {
+    	Tweet af = new Tweet();
         try {
             PreparedStatement preparedStatement = connection.
-                    prepareStatement("select * from Afirmacion where idAfirmacion=?");
-            preparedStatement.setInt(1, afirmacionId);
+                    prepareStatement("select * from Tweet where idTweet=?");
+            preparedStatement.setInt(1, TweetId);
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-                af.setidAfirmacion(rs.getInt("idAfirmacion"));
+               // af.setidTweet(rs.getInt("idTweet"));
                 af.setAutor(rs.getString("autor"));
                 af.setTexto(rs.getString("texto"));
                 af.setVeracidad(rs.getString("veracidad"));

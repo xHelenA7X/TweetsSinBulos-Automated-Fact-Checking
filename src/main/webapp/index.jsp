@@ -1,3 +1,4 @@
+<%@page language="java"%>
 <%@page contentType="text/html"%> 
 <%@page pageEncoding="UTF-8"%> 
 <!DOCTYPE html>
@@ -76,10 +77,10 @@
 							<div class="white-text titulo"><p>TweetCheck<p></div>
 							<h1 class="white-text">Verifica tweets en tiempo real.</h1>
 							<div class="webdesigntuts-workshop">
-								<form action="" method="">		    
-									<input name="buscador" type="url" placeholder="Introduce la URL del tweet">		    	
-									<a class="main-button icon-button" href="#">Verificar</a>
-								</form>
+								<form method="POST" action='extraetweet'>		    
+									<input name="UrlTweet" type="url" placeholder="Introduce la URL del tweet">		    	
+									<input type="submit" class="main-button icon-button" placeholder="Verificar">
+                                </form>
 							</div>
 						</div>
 					</div>

@@ -3,23 +3,26 @@ package ua.model;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class Afirmacion {
+public class Tweet {
 	private String autor;
     private String texto;
+    private String fecha_publicacion;
     private String fecha_registro;
     private String veracidad;
     private int idAfirmacion;
+    private String textoPlano;
     
-    public Afirmacion() {
+    public Tweet() {
     	
     }
     
-    public Afirmacion(String autor, String texto, String veracidad) {
+    public Tweet(String autor, String textoPlano, String texto, String fecha_publicacion) {
 		this.autor = autor;
+		this.textoPlano = textoPlano;
 		this.texto = texto;
 		Calendar fecha = new GregorianCalendar();
+		this.fecha_publicacion = fecha_publicacion;
 		this.fecha_registro = Calendar.DAY_OF_MONTH+"/"+Calendar.MONTH+"/"+Calendar.YEAR;
-		this.veracidad = veracidad;
 	}
     
 	public int getidAfirmacion() {
@@ -37,6 +40,14 @@ public class Afirmacion {
 	public void setAutor(String autor) {
 		this.autor = autor;
 	}
+	
+	public String getTextoPlano() {
+		return textoPlano;
+	}
+
+	public void setTextoPlano(String texto) {
+		this.textoPlano = texto;
+	}
 
 	public String getTexto() {
 		return texto;
@@ -53,6 +64,14 @@ public class Afirmacion {
 	public void setFecha_registro(String fecha) {
 		this.fecha_registro = fecha;
 	}
+	
+	public String getFecha_publicacion() {
+		return fecha_publicacion;
+	}
+	
+	public void setFecha_publicacion(String fecha) {
+		this.fecha_publicacion= fecha;
+	}
 
 	public String getVeracidad() {
 		return veracidad;
@@ -60,6 +79,10 @@ public class Afirmacion {
 
 	public void setVeracidad(String veracidad) {
 		this.veracidad = veracidad;
+	}
+	
+	public int contarPalabras() {
+		return this.textoPlano.split(" ").length;
 	}
 
 	@Override
