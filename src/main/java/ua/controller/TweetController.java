@@ -2,6 +2,9 @@ package ua.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +31,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
+import ua.dao.TweetDao;
 import ua.model.Tweet;
 
 @WebServlet(name="extraetweet",urlPatterns={"/extraetweet"})
@@ -37,7 +41,7 @@ public class TweetController extends HttpServlet{
 	private static TwitterFactory f;
 	private static Twitter tw;
 	private static List<String> nombresComunes;
-	
+
 	private static void Tokens() {
 		cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setOAuthConsumerKey("QmLdCybkqumf2JOQr1E0ZLxWo")
@@ -59,38 +63,7 @@ public class TweetController extends HttpServlet{
 		return idTweet;
 	}
 	
-	private void anotaTexto(String[] arrayTexto, String idioma){
-		TreeTaggerWrapper tt = new TreeTaggerWrapper<String>();
-		try {
-			
-			switch(idioma){
-			case "en":
-				tt.setModel("english.par");
-			default:
-				tt.setModel("spanish.par");
-			}
-			
-			tt.setHandler(new TokenHandler<String>() {
-				public void token(String token, String pos, String lemma) {
-						log.warning(token + "\t" + pos + "\t" + lemma);
-						if(pos.equals("NC")) {
-							nombresComunes.add(token);
-						}
-				}
-			});
-			
-			tt.process(Arrays.asList(arrayTexto));
-			
-		} catch (Exception e) {
-			log.warning("Excepcion: " + e.toString());
-		}
-		finally{
-			tt.destroy();
-		}
-			
-			
-	}
-
+	
 	private void JSON(HttpServletResponse response, String salida) throws ServletException, IOException{
 			response.setContentType("application/json");
 			response.setCharacterEncoding("utf-8");
@@ -100,26 +73,6 @@ public class TweetController extends HttpServlet{
 			response.setStatus(error);
 			PrintWriter out = response.getWriter();
 			out.println(output);
-	}
-	
-	private String quitaUrls(String texto){
-		String nuevoTexto = "";
-		String[] arrayTexto = texto.split(" ");
-		
-		for(int i = 0;i < arrayTexto.length; i++){
-			if(arrayTexto[i].contains("http")){
-				i++;
-			}
-			else{
-				if(i != arrayTexto.length -1){
-					nuevoTexto+= arrayTexto[i] + " ";
-				}
-				else{
-					nuevoTexto+= arrayTexto[i];
-				}
-			}
-		}
-		return nuevoTexto;
 	}
 	public JSONObject formulaJSON(String id){
 		long id_long = Long.parseLong(id);
@@ -180,7 +133,6 @@ public class TweetController extends HttpServlet{
 				texto = texto.replace(";", "");
 				texto = texto.replace("#", "");
 				String []arrayTexto = texto.split(" ");
-				anotaTexto(arrayTexto,idioma);
 			}
 			
 /**
@@ -198,38 +150,49 @@ public class TweetController extends HttpServlet{
 		}
 		return json;
 	}
-	private void QueryTweets(String queryString) {
-		try {
-			Query query = new Query(queryString);
-	        QueryResult result;
-	        result = tw.search(query);
-	        List<Status> tweets = result.getTweets();
-	        for (Status tweet : tweets) {
-	            log.warning("@" + tweet.getUser().getScreenName() + " - " +tweet.getCreatedAt()+" - "+ tweet.getText());
-	        }
-		} catch (TwitterException te) {
-            te.printStackTrace();
-            log.warning("Failed to search tweets: " + te.getMessage());
-            System.exit(-1);
-        }
-	}
 	
-	private void buscaTweets() {
-		String queryString = "";
-		String cadenaCompleta="";
-		int j = 0;
-		int i = j+1;
-        while(j < nombresComunes.size()) {
-        	queryString = nombresComunes.get(j) + " " + nombresComunes.get(i);
-        	log.warning(queryString);
-        	cadenaCompleta+=nombresComunes.get(j);
-        	QueryTweets(queryString);
-        	j++;
-        	if(i+1 == nombresComunes.size()){i=0;}
-        	else {i++;}
-        }
-        QueryTweets(cadenaCompleta);
+	private String quitaUrls(String texto){
+		String nuevoTexto = "";
+		String[] arrayTexto = texto.split(" ");
+		
+		for(int i = 0;i < arrayTexto.length; i++){
+			if(arrayTexto[i].contains("http")){
+				i++;
+			}
+			else{
+				if(i != arrayTexto.length -1){
+					nuevoTexto+= arrayTexto[i] + " ";
+				}
+				else{
+					nuevoTexto+= arrayTexto[i];
+				}
+			}
+		}
+		return nuevoTexto;
 	}
+	private Tweet extraeCamposTweet(String id) {
+		long id_long = Long.parseLong(id);
+		Tweet tweet = null;
+		
+		try {
+			Status status = tw.showStatus(id_long);
+			String idTweet = Long.toString(status.getId());
+			String autor = status.getUser().getName();
+			String texto = status.getText();
+			String idioma = status.getLang();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+			String fechaPublicacion = dateFormat.format(status.getCreatedAt());
+			tweet = new Tweet(idTweet,autor,texto,idioma,fechaPublicacion);
+			
+			
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tweet;
+		
+	}
+
 
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -239,16 +202,15 @@ public class TweetController extends HttpServlet{
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 Tokens(); //Para registrar el API de Twitter
+		 Tokens();
 		 String url = request.getParameter("UrlTweet");
 		 String id = extraerId(url);
-		 JSONObject json = formulaJSON(id);
-		 Tweet tweet = new Tweet(json.getString("userName"),json.getString("planeText"),json.getString("text"),json.getString("createdAt"));
-		 buscaTweets();
-		 
+		 Tweet tweet = extraeCamposTweet(id);
+		 TweetDao dao = new TweetDao();
+		 dao.addTweet(tweet);
+
 		 
 	     RequestDispatcher view = request.getRequestDispatcher("salida.jsp");
-	     request.setAttribute("textoTweet", tweet.getTextoPlano());
 	     view.forward(request, response);
 		 
 	 }

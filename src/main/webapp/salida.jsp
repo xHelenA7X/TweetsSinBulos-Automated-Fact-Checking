@@ -97,7 +97,7 @@
 						<div class="col-md-6">
 							<div class="section-header">
 								<h2>Afirmación analizada:</h2>
-								<p class="lead">${textoTweet}</p>
+								<p class="lead">aqui texto</p>
 							</div>
 	
 							<!-- feature -->
@@ -125,8 +125,15 @@
 								<i class="feature-icon fa fa-comments"></i>
 								<div class="feature-content">
 									<h4>¿Qué dice la comunidad al respecto?</h4>
-									<p>Ceteros fuisset mei no, soleat epicurei adipiscing ne vis. Et his suas veniam nominati.</p>
-								</div>
+									<p>
+                                       
+                                        <div id="container">
+                                        <blockquote class="twitter-tweet">
+                                            <p lang="es" dir="ltr">Medios confirman que el limon cura el cancer.</p>
+                                            &mdash; TweetCheck (@tweetcheck_) 
+                                            <a href="https://twitter.com/tweetcheck_/status/1102625719119765510?ref_src=twsrc%5Etfw">March 4, 2019</a></blockquote>
+                                        </div> 
+                                    </p>       
 							</div>
 							<!-- /feature -->
 	
@@ -223,7 +230,9 @@
 		<!-- jQuery Plugins -->
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><div id="container"></div>
+        <script type="text/javascript" src="js/salida.js"></script>
 
 	</body>
 </html>
