@@ -116,24 +116,9 @@ public class TweetController extends HttpServlet{
 			json.put("languaje", idioma);
 			json.put("planeText", status.getText());
 			
-			String texto;
-			if(existe_url){
-				texto = quitaUrls(status.getText().replace("#", ""));
-			}
-			else{
-				texto = status.getText().replace("#", "");
-			}
-			json.put("text", texto);
+			json.put("text", status.getText());
 			
-			if(texto != ""){
-				texto = texto.trim();
-				texto = texto.replace(",", "");
-				texto = texto.replace(".", "");
-				texto = texto.replace(":", "");
-				texto = texto.replace(";", "");
-				texto = texto.replace("#", "");
-				String []arrayTexto = texto.split(" ");
-			}
+		
 			
 /**
 			JSONArray array = new JSONArray();
@@ -151,25 +136,7 @@ public class TweetController extends HttpServlet{
 		return json;
 	}
 	
-	private String quitaUrls(String texto){
-		String nuevoTexto = "";
-		String[] arrayTexto = texto.split(" ");
-		
-		for(int i = 0;i < arrayTexto.length; i++){
-			if(arrayTexto[i].contains("http")){
-				i++;
-			}
-			else{
-				if(i != arrayTexto.length -1){
-					nuevoTexto+= arrayTexto[i] + " ";
-				}
-				else{
-					nuevoTexto+= arrayTexto[i];
-				}
-			}
-		}
-		return nuevoTexto;
-	}
+	
 	private Tweet extraeCamposTweet(String id) {
 		long id_long = Long.parseLong(id);
 		Tweet tweet = null;

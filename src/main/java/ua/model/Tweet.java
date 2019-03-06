@@ -127,7 +127,27 @@ public class Tweet {
 		return "Afirmacion [idAfirmacion=" + idAfirmacion + ", autor=" + autor + ", texto=" + texto + ", fecha_registro=" + fecha_registro + ", veracidad="
 				+ veracidad + "]";
 	}
+	private void quitaUrls(String texto){
+		String nuevoTexto = "";
+		String[] arrayTexto = texto.split(" ");
+		
+		for(int i = 0;i < arrayTexto.length; i++){
+			if(arrayTexto[i].contains("http")){
+				i++;
+			}
+			else{
+				if(i != arrayTexto.length -1){
+					nuevoTexto+= arrayTexto[i] + " ";
+				}
+				else{
+					nuevoTexto+= arrayTexto[i];
+				}
+			}
+		}
+		texto = nuevoTexto;
+	}
 	private void convierteTextoPlano() {
+		quitaUrls(this.textoPlano);
 		this.textoPlano = this.texto;
 		this.textoPlano = textoPlano.trim();
 		this.textoPlano = textoPlano.replace(",", "");
