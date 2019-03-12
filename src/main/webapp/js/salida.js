@@ -29,15 +29,19 @@ function removeElement(nodo){
 }
 
 function JSON(){
-    fetch('extraetweet?action=listaResultados',{credentials: 'same-origin'})
+    var idTweet = $("input[name='idTweet']").value;
+    fetch('extraetweet?action=listaResultados&idTweet='+idTweet,{credentials: 'same-origin'})
 	 .then(function(response){
 		return response.json();
 	})
 	.then(function(responseAsJson){	
 		var output;
-		if("result" in responseAsJson) {
-			console.log(responseAsJson.result);
-		}	
+		if("error" in responseAsJson) {
+			console.log("error");
+        }
+        else{
+            $(".lead").innerHTML = responseAsJson.texto;
+        }
 	})
 	.catch(function(error){
 		alert("Ha ocurrido un error listando los resultados: " + error);
@@ -46,11 +50,13 @@ function JSON(){
 }
 
 
+
 /** 
  * Iniciar todos los elementos
 */
 function init(){
-	twttr.widgets.createTimeline(
+    /** 
+    twttr.widgets.createTimeline(
     {
         sourceType: "collection",
         id: "539487832448843776",
@@ -63,7 +69,7 @@ function init(){
         borderColor: "#a80000"
     }
     );
-    console.log("Hola mundo");
+    */
     JSON();
 	
 }

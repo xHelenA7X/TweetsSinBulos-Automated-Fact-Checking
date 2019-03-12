@@ -24,6 +24,7 @@
 
     </head>
 	<body>
+        <input type="hidden" name="idTweet" value="${idTweet}">
 		<!-- Header -->
 		<header id="header" class="transparent-nav">
 			<div class="container">
@@ -125,13 +126,7 @@
 								<div class="feature-content">
 									<h4>¿Qué dice la comunidad al respecto?</h4>
 									<p>
-                                       
-                                        <div id="container">
-                                        <blockquote class="twitter-tweet">
-                                            <p lang="es" dir="ltr">Medios confirman que el limon cura el cancer.</p>
-                                            &mdash; TweetCheck (@tweetcheck_) 
-                                            <a href="https://twitter.com/tweetcheck_/status/1102625719119765510?ref_src=twsrc%5Etfw">March 4, 2019</a></blockquote>
-                                        </div> 
+                                       <blockquote class="twitter-tweet"><p lang="es" dir="ltr">limon cura cancer</p>&mdash; TweetCheck (@tweetcheck_) <a href="https://twitter.com/tweetcheck_/status/1102635252978192386?ref_src=twsrc%5Etfw">March 4, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                                     </p>       
 							</div>
 							<!-- /feature -->
@@ -220,11 +215,10 @@
 
 
         <!-- jQuery Plugins -->
-		<script type="text/javascript" src="js/jquery.min.js"></script>
+        <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><div id="container"></div>
         <script type="text/javascript" src="js/salida.js"></script>
-
 	</body>
 </html>

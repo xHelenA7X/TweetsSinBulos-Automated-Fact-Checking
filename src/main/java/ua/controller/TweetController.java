@@ -80,8 +80,8 @@ public class TweetController extends HttpServlet{
 			out.println(output);
 	}
 	
-	public JSONObject formulaJSON(String id){
-		long id_long = Long.parseLong(id);
+	public JSONObject formulaJSON(Tweet tweet){
+		long id_long = Long.parseLong(tweet.getIdTweet());
 		String salida = "";
 		JSONObject json = new JSONObject();
 		boolean existe_url=false;
@@ -89,11 +89,12 @@ public class TweetController extends HttpServlet{
 		try {
 			Status status = tw.showStatus(id_long);
 			
-			json.put("createdAt", status.getCreatedAt());
+			json.put("fechaCreacion", tweet.getFecha_publicacion());
+			json.put("fechaRegistro", tweet.getFecha_registro());
 			//json.put("userMentionEntities", status.getUserMentionEntities());
-			json.put("userName", status.getUser().getName());
-			json.put("userLocation", status.getUser().getLocation());
-			json.put("tweetLocation", status.getGeoLocation());
+			json.put("usuario", tweet.getAutor());
+			json.put("localizacion", tweet.getLocalizacion());
+			/**
 			URLEntity[] urls = status.getURLEntities();
 			if(urls != null){
 				existe_url = true;
@@ -105,6 +106,8 @@ public class TweetController extends HttpServlet{
 				}
 				json.put("urls", arrayUrls);
 			}
+			**/
+			/**
 			//json.put("contributors", status.getContributors());
 			HashtagEntity[] hashtags = status.getHashtagEntities();
 			
@@ -117,14 +120,21 @@ public class TweetController extends HttpServlet{
 				}
 				json.put("hashtags", arrayHashtags);
 			}
+			**/
 			//json.put("media", status.getMediaEntities()); Esto es importante
-			String idioma = status.getLang();
-			json.put("languaje", idioma);
-			json.put("planeText", status.getText());
+			json.put("idioma", tweet.getIdioma());
+			json.put("textoPlano", tweet.getTextoPlano());
+			json.put("texto", tweet.getTexto());
+			json.put("veracidad", tweet.getVeracidad());
 			
-			json.put("text", status.getText());
-			
-		
+			//insertamos los ids de los tweets relacionados
+			JSONArray arrayTweetsRelacionados = new JSONArray();
+			for(int i = 0; i < tweet.getIdTweetsRelacionados().size(); i++){
+				JSONObject item = new JSONObject();
+				item.put("idTweetRelacionado"+(i), tweet.getIdTweetsRelacionados().get(i));
+				arrayTweetsRelacionados.put(item);
+			}
+			json.put("hashtags", arrayTweetsRelacionados);
 			
 /**
 			JSONArray array = new JSONArray();
@@ -150,13 +160,14 @@ public class TweetController extends HttpServlet{
 		try {
 			Status status = tw.showStatus(id_long);
 			String idTweet = Long.toString(status.getId());
+			String nombrePerfil = status.getUser().getScreenName();
 			String autor = status.getUser().getName();
 			String texto = status.getText();
 			String idioma = status.getLang();
 			String localizacion = status.getUser().getLocation();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 			String fechaPublicacion = dateFormat.format(status.getCreatedAt());
-			tweet = new Tweet(idTweet,autor,texto,idioma,fechaPublicacion,localizacion);
+			tweet = new Tweet(idTweet,nombrePerfil,autor,texto,idioma,fechaPublicacion,localizacion);
 			
 			
 		} catch (TwitterException e) {
@@ -171,9 +182,17 @@ public class TweetController extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 					throws IOException, ServletException { 
-		log.warning("Hola,peticion get");
+		String idTweet = req.getParameter("idTweet");
 		JSONObject json = new JSONObject();
-		json.put("result", "ok");
+		
+		if(idTweet != null) {
+			Tweet tweet = dao.getTweetById(idTweet);
+			json = formulaJSON(tweet);
+		}
+		else {
+			json.put("error", "Id del tweet no registrado");
+		}
+		
 		JSON(resp, json.toString());
 	}
 	
@@ -191,6 +210,7 @@ public class TweetController extends HttpServlet{
 		 }
 		 
 	     RequestDispatcher view = request.getRequestDispatcher("salida.jsp");
+	     request.setAttribute("idTweet", id);
 	     view.forward(request, response);
 		 
 	 }

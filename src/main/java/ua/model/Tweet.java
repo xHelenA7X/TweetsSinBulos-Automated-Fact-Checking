@@ -30,6 +30,7 @@ public class Tweet {
 	private static final Logger log = Logger.getLogger(TweetController.class.getName());
 	private String idTweet;
 	private String autor;
+	private String nombrePerfil;
     private String texto;
     private String fecha_publicacion;
     private String fecha_registro;
@@ -58,9 +59,10 @@ public class Tweet {
 		
 	}
     
-    public Tweet(String idTweet,String autor, String texto, String idioma,String fecha_publicacion,String localizacion) {
+    public Tweet(String idTweet,String nombrePerfil,String autor, String texto, String idioma,String fecha_publicacion,String localizacion) {
 		this.idTweet = idTweet;
-    	this.autor = autor;
+    	this.nombrePerfil = nombrePerfil;
+		this.autor = autor;
 		this.texto = texto;
 		this.convierteTextoPlano();
 		this.fecha_publicacion = fecha_publicacion;
@@ -80,6 +82,14 @@ public class Tweet {
 	public void setIdTweet(String idTweet) {
 		this.idTweet = idTweet;
 	}    
+	
+	public String getNombrePerfil() {
+		return nombrePerfil;
+	}
+
+	public void setNombrePerfil(String nombrePerfil) {
+		this.nombrePerfil = nombrePerfil;
+	}
     
 	public String getAutor() {
 		return autor;

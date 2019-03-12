@@ -43,6 +43,7 @@ public class DbUtil {
 					connection.createStatement().executeUpdate(
 					"CREATE TABLE `factchecking`.`Tweet` (\n" + 
 					"  `idTweet` VARCHAR(50) NOT NULL,\n" + 
+					"  `nombrePerfil` VARCHAR(45) NOT NULL,\n" +
 					"  `autor` VARCHAR(45) NOT NULL,\n" + 
 					"  `texto` VARCHAR(500) NOT NULL,\n" +
 					"  `textoPlano` VARCHAR(500) NOT NULL,\n" +
