@@ -22,12 +22,19 @@ public class TweetDao {
     public void addTweet(Tweet af) {
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("insert into Tweet(autor,texto,veracidad,fecha_registro) values (?, ?, ?, ? )");
+                    .prepareStatement("insert into Tweet(idTweet,autor,texto,textoPlano,idioma,localizacion,"
+                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
             // Parameters start with 1
-            preparedStatement.setString(1, af.getAutor());
-            preparedStatement.setString(2, af.getTexto());
-            preparedStatement.setString(3, af.getVeracidad());
-            preparedStatement.setString(4, af.getFecha_registro());
+            preparedStatement.setString(1, af.getIdTweet());
+            preparedStatement.setString(2, af.getAutor());
+            preparedStatement.setString(3, af.getTexto());
+            preparedStatement.setString(4, af.getTextoPlano());
+            preparedStatement.setString(5, af.getIdioma());
+            preparedStatement.setString(6, af.getLocalizacion());
+            preparedStatement.setString(7, af.getVeracidad());
+            preparedStatement.setString(8, af.getFecha_registro());
+            preparedStatement.setString(9, af.getFecha_publicacion());
+            preparedStatement.setString(10, af.getIdTweetsRelacionados().toString());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -87,20 +94,25 @@ public class TweetDao {
         return Tweetes;
     }
 
-    public Tweet getTweetById(int TweetId) {
+    public Tweet getTweetById(String TweetId) {
     	Tweet af = new Tweet();
         try {
             PreparedStatement preparedStatement = connection.
                     prepareStatement("select * from Tweet where idTweet=?");
-            preparedStatement.setInt(1, TweetId);
+            preparedStatement.setString(1, TweetId);
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-               // af.setidTweet(rs.getInt("idTweet"));
+                af.setIdTweet(rs.getString("idTweet"));
                 af.setAutor(rs.getString("autor"));
                 af.setTexto(rs.getString("texto"));
+                af.setTextoPlano(rs.getString("textoPlano"));
+                af.setIdioma(rs.getString("idioma"));
+                af.setLocalizacion(rs.getString("localizacion"));
                 af.setVeracidad(rs.getString("veracidad"));
-                af.setFecha_registro(rs.getString("email"));
+                af.setFecha_registro(rs.getString("fecha_registro"));
+                af.setFecha_publicacion(rs.getString("fecha_publicacion"));
+                af.setIdTweetsRelacionadosString(rs.getString("tweets_relacionados"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

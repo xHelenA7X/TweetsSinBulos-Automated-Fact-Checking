@@ -41,6 +41,7 @@ public class TweetController extends HttpServlet{
 	private static TwitterFactory f;
 	private static Twitter tw;
 	private static List<String> nombresComunes;
+	private TweetDao dao;
 
 	private static void Tokens() {
 		cb = new ConfigurationBuilder();
@@ -51,6 +52,10 @@ public class TweetController extends HttpServlet{
 		f = new TwitterFactory(cb.build());
 		tw = f.getInstance();
 		nombresComunes = new ArrayList<String>();
+	}
+	public TweetController() {
+		super();
+		 dao = new TweetDao();
 	}
 	
 	private String extraerId(String url) {
@@ -74,6 +79,7 @@ public class TweetController extends HttpServlet{
 			PrintWriter out = response.getWriter();
 			out.println(output);
 	}
+	
 	public JSONObject formulaJSON(String id){
 		long id_long = Long.parseLong(id);
 		String salida = "";
@@ -147,9 +153,10 @@ public class TweetController extends HttpServlet{
 			String autor = status.getUser().getName();
 			String texto = status.getText();
 			String idioma = status.getLang();
+			String localizacion = status.getUser().getLocation();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 			String fechaPublicacion = dateFormat.format(status.getCreatedAt());
-			tweet = new Tweet(idTweet,autor,texto,idioma,fechaPublicacion);
+			tweet = new Tweet(idTweet,autor,texto,idioma,fechaPublicacion,localizacion);
 			
 			
 		} catch (TwitterException e) {
@@ -165,6 +172,9 @@ public class TweetController extends HttpServlet{
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 					throws IOException, ServletException { 
 		log.warning("Hola,peticion get");
+		JSONObject json = new JSONObject();
+		json.put("result", "ok");
+		JSON(resp, json.toString());
 	}
 	
 	@Override
@@ -172,10 +182,13 @@ public class TweetController extends HttpServlet{
 		 Tokens();
 		 String url = request.getParameter("UrlTweet");
 		 String id = extraerId(url);
-		 Tweet tweet = extraeCamposTweet(id);
-		 TweetDao dao = new TweetDao();
-		 dao.addTweet(tweet);
-
+		 Tweet tweet = dao.getTweetById(id);
+		 
+		 if(tweet.getIdTweet() == null){
+			 //Ese tuit no ha sido registrado todavia
+			 tweet = extraeCamposTweet(id);
+			 dao.addTweet(tweet);
+		 }
 		 
 	     RequestDispatcher view = request.getRequestDispatcher("salida.jsp");
 	     view.forward(request, response);

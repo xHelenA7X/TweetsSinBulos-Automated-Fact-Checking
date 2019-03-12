@@ -1,10 +1,13 @@
 package ua.model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.annolab.tt4j.TokenHandler;
 import org.annolab.tt4j.TreeTaggerWrapper;
@@ -20,37 +23,53 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
+import ua.controller.TweetController;
+import ua.dao.TweetDao;
 
 public class Tweet {
+	private static final Logger log = Logger.getLogger(TweetController.class.getName());
 	private String idTweet;
 	private String autor;
     private String texto;
     private String fecha_publicacion;
     private String fecha_registro;
     private String veracidad;
-    private int idAfirmacion;
     private String textoPlano;
     private String idioma;
+    private String localizacion;
 	private List<String> IdTweetsRelacionados;
     private static ConfigurationBuilder cb;
 	private static TwitterFactory f;
 	private static Twitter tw;
-	private static List<String> nombresComunes;
+	
+
+	private static void Tokens() {
+		cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true).setOAuthConsumerKey("QmLdCybkqumf2JOQr1E0ZLxWo")
+								.setOAuthConsumerSecret("Ze8lAGSxz9NTWNZIbqeOrwzFau4N6b0kAoxwiijNKAHtircdfH")
+								.setOAuthAccessToken("1096330876705755136-vq4PO4Oe1kLsMZw6ZUtX7hyC8MgW97")
+								.setOAuthAccessTokenSecret("QgDZ8tRc0ZEpMF5R2Rv3veZTrXx4vMZANdCVTMB1jeyPg");
+		f = new TwitterFactory(cb.build());
+		tw = f.getInstance();
+	
+	}
 	
 	public Tweet() {
 		
 	}
     
-    public Tweet(String idTweet,String autor, String texto, String idioma,String fecha_publicacion) {
+    public Tweet(String idTweet,String autor, String texto, String idioma,String fecha_publicacion,String localizacion) {
 		this.idTweet = idTweet;
     	this.autor = autor;
 		this.texto = texto;
 		this.convierteTextoPlano();
-		Calendar fecha = new GregorianCalendar();
 		this.fecha_publicacion = fecha_publicacion;
-		this.fecha_registro = Calendar.DAY_OF_MONTH+"/"+Calendar.MONTH+"/"+Calendar.YEAR;
+		//Date myDate = new Date();
+		this.fecha_registro= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 		IdTweetsRelacionados = new ArrayList<String>();
 		this.idioma=idioma;
+		this.localizacion = localizacion;
+		Tokens();
 		anotaTexto();
 	}
     
@@ -60,14 +79,6 @@ public class Tweet {
 
 	public void setIdTweet(String idTweet) {
 		this.idTweet = idTweet;
-	}
-    
-	public int getidAfirmacion() {
-		return idAfirmacion;
-	}
-
-	public void setidAfirmacion(int id) {
-		this.idAfirmacion = id;
 	}    
     
 	public String getAutor() {
@@ -92,6 +103,14 @@ public class Tweet {
 
 	public void setTexto(String texto) {
 		this.texto = texto;
+	}
+	
+	public String getIdioma() {
+		return idioma;
+	}
+
+	public void setIdioma(String idioma) {
+		this.idioma = idioma;
 	}
 
 	public String getFecha_registro() {
@@ -118,13 +137,42 @@ public class Tweet {
 		this.veracidad = veracidad;
 	}
 	
+	public String getLocalizacion() {
+		return localizacion;
+	}
+
+	public void setLocalizacion(String localizacion) {
+		this.localizacion = localizacion;
+	}
+	
+	public List<String> getIdTweetsRelacionados() {
+		return IdTweetsRelacionados;
+	}
+
+	public void setIdTweetsRelacionados(List<String> tweets) {
+		this.IdTweetsRelacionados = tweets;
+	}
+	
+	public void setIdTweetsRelacionadosString(String tweets) {
+		ArrayList<String> p = new ArrayList<>();
+		String[] lista = tweets.split(" ");
+		
+		for(int index=0; index < lista.length; index++) {
+			String palabra = lista[index].replace(",", "").replace("[", "").replace("]", "").replace(" ", "");
+			p.add(palabra);
+		}
+		
+		this.IdTweetsRelacionados = p;
+	}
+	
+	
 	public int contarPalabras() {
 		return this.textoPlano.split(" ").length;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "Afirmacion [idAfirmacion=" + idAfirmacion + ", autor=" + autor + ", texto=" + texto + ", fecha_registro=" + fecha_registro + ", veracidad="
+		return "Afirmacion [idTweet=" + idTweet + ", autor=" + autor + ", texto=" + texto + ", fecha_registro=" + fecha_registro + ", veracidad="
 				+ veracidad + "]";
 	}
 	private void quitaUrls(String texto){
@@ -147,7 +195,9 @@ public class Tweet {
 		texto = nuevoTexto;
 	}
 	private void convierteTextoPlano() {
-		quitaUrls(this.textoPlano);
+		if(this.texto.contains("http")) {
+			quitaUrls(this.texto);
+		}
 		this.textoPlano = this.texto;
 		this.textoPlano = textoPlano.trim();
 		this.textoPlano = textoPlano.replace(",", "");
@@ -158,6 +208,7 @@ public class Tweet {
 	}
 	
 	private void anotaTexto(){
+		List<String> nombresComunes = new ArrayList<>();
 		String []arrayTexto = this.textoPlano.split(" ");
 		
 		TreeTaggerWrapper tt = new TreeTaggerWrapper<String>();
@@ -169,7 +220,6 @@ public class Tweet {
 			default:
 				tt.setModel("spanish.par");
 			}
-			
 			tt.setHandler(new TokenHandler<String>() {
 				public void token(String token, String pos, String lemma) {
 						//log.warning(token + "\t" + pos + "\t" + lemma);
@@ -178,24 +228,22 @@ public class Tweet {
 						}
 				}
 			});
-			
 			tt.process(Arrays.asList(arrayTexto));
-			buscaTweets();
-			
+			buscaTweetsRelacionados(nombresComunes);
 		} catch (Exception e) {
-			//log.warning("Excepcion: " + e.toString());
+			log.warning("Excepcion TreeTagger: " + e.toString());
 		}
 		finally{
 			tt.destroy();
 		}		
 	}
 	
-	private void QueryTweets(String queryString) {
+	private void extraeIdTweetsRelacionados(String queryString) {
 		try {
 			Query query = new Query(queryString);
 	        QueryResult result;
 	        result = tw.search(query);
-	        List<Status> tweets = result.getTweets();        
+	        List<Status> tweets = result.getTweets();   
 
 	        for (Status tweet : tweets) {
 	            //log.warning("@" + tweet.getUser().getScreenName() + " - " +tweet.getCreatedAt()+" - "+ tweet.getText() + " _ " + tweet.getId());
@@ -204,15 +252,19 @@ public class Tweet {
 	        }
 		} catch (TwitterException te) {
             te.printStackTrace();
-            //log.warning("Failed to search tweets: " + te.getMessage());
+            log.warning("Failed to search tweets: " + te.getMessage());
             System.exit(-1);
         }
 	}
 	
-	private void buscaTweets() {
+	private void buscaTweetsRelacionados(List<String> nombresComunes) {
 		String queryString = "";
 		String cadenaCompleta="";
 		
+		for(int i = 0; i < nombresComunes.size(); i++) {
+			cadenaCompleta+=nombresComunes.get(i)+" ";
+		}
+		/**
 		if(nombresComunes.size() < 5) {
 			int j = 0;
 			int i = j+1;
@@ -248,6 +300,7 @@ public class Tweet {
 	        	}
 			}
 		}
-		QueryTweets(cadenaCompleta);
+		**/
+		extraeIdTweetsRelacionados(cadenaCompleta);
 	}
 }

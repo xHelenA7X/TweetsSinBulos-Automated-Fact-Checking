@@ -37,17 +37,22 @@ public class DbUtil {
 			try {
 				metadata = connection.getMetaData();
 
-				resultSet = metadata.getTables(null, "factchecking", "Afirmacion", null);
-				// Si la tabla 'Afirmacion' no existe, la creamos
+				resultSet = metadata.getTables(null, "factchecking", "Tweet", null);
+				// Si la tabla 'Tweet' no existe, la creamos
 				if (!resultSet.next()) {
 					connection.createStatement().executeUpdate(
-					"CREATE TABLE `factchecking`.`Afirmacion` (\n" + 
-					"  `idAfirmacion` INT NOT NULL AUTO_INCREMENT,\n" + 
-					"  `autor` VARCHAR(45) NULL,\n" + 
-					"  `texto` VARCHAR(45) NULL,\n" + 
-					"  `veracidad` VARCHAR(45) NULL,\n" + 
-					"  `fecha_registro` VARCHAR(45) NULL,\n" + 
-					"  PRIMARY KEY (`idAfirmacion`));\n" + 
+					"CREATE TABLE `factchecking`.`Tweet` (\n" + 
+					"  `idTweet` VARCHAR(50) NOT NULL,\n" + 
+					"  `autor` VARCHAR(45) NOT NULL,\n" + 
+					"  `texto` VARCHAR(500) NOT NULL,\n" +
+					"  `textoPlano` VARCHAR(500) NOT NULL,\n" +
+					"  `idioma` VARCHAR(2) NOT NULL,\n" + 
+					"  `localizacion` VARCHAR(45) NOT NULL,\n" +
+					"  `veracidad` VARCHAR(45),\n" + 
+					"  `fecha_registro` VARCHAR(45) NOT NULL,\n" +
+					"  `fecha_publicacion` VARCHAR(45) NOT NULL,\n" +
+					"  `tweets_relacionados` VARCHAR(500) NOT NULL,\n" +
+					"  PRIMARY KEY (`idTweet`));\n" + 
 					"");
 				}
 				resultSet.close();

@@ -24,7 +24,6 @@
 
     </head>
 	<body>
-
 		<!-- Header -->
 		<header id="header" class="transparent-nav">
 			<div class="container">
@@ -97,7 +96,7 @@
 						<div class="col-md-6">
 							<div class="section-header">
 								<h2>Afirmación analizada:</h2>
-								<p class="lead">aqui texto</p>
+								<p class="lead">"Hola"</p>
 							</div>
 	
 							<!-- feature -->
@@ -138,13 +137,6 @@
 							<!-- /feature -->
 	
 						</div>
-	
-						<div class="col-md-6">
-							<div class="about-img">
-								<img src="./img/about.png" alt="">
-							</div>
-						</div>
-	
 					</div>
 					<!-- row -->
 	
@@ -227,7 +219,7 @@
 		<!-- /preloader -->
 
 
-		<!-- jQuery Plugins -->
+        <!-- jQuery Plugins -->
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/main.js"></script>

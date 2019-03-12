@@ -27,26 +27,24 @@ function insertBeforeChild(padre,hijo,nuevoHijo){
 function removeElement(nodo){
     nodo.remove();
 }
-function analizaUrl(url){
-	//var re = new RegExp("hola"+"[A-z]+"+"adios"+"[0-9]+"); //true devuelve holaAsdfadios1 el + da obligatoriedad
-	var re = new RegExp("https://twitter.com/"+"[0-z]+"+"/status/"+"[0-9]+");
-	return re.test(url);
+
+function JSON(){
+    fetch('extraetweet?action=listaResultados',{credentials: 'same-origin'})
+	 .then(function(response){
+		return response.json();
+	})
+	.then(function(responseAsJson){	
+		var output;
+		if("result" in responseAsJson) {
+			console.log(responseAsJson.result);
+		}	
+	})
+	.catch(function(error){
+		alert("Ha ocurrido un error listando los resultados: " + error);
+	})	
+
 }
 
-function extraerTweet(){
-	var url = $("input[name='buscador']").value;
-	
-	if(url == ""){
-		alert("Es necesario especificar una URL.");
-	}
-	else{
-		var valido = analizaUrl(url);
-		
-		if(!valido){
-		    alert("Introduzca una URL de tweet válida, formato: https://twitter.com/\"usuario\"/status/\"código tuit\"");
-		}
-	}
-}
 
 /** 
  * Iniciar todos los elementos
@@ -65,10 +63,8 @@ function init(){
         borderColor: "#a80000"
     }
     );
-    console.log($("input[name='json']"));
-    console.log($("input[name='json']").placeholder);
-    var urls = $("input[name='json']").placeholder;
-    console.log(urls.urlRelated[0]);
+    console.log("Hola mundo");
+    JSON();
 	
 }
 
