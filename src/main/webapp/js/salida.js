@@ -28,6 +28,28 @@ function removeElement(nodo){
     nodo.remove();
 }
 
+function dibujaTweetsComunidad(div,json){
+    var divTweet = document.createElement("div");
+    divTweet.setAttribute("id","tweet");
+    divTweet.setAttribute("tweetID",json.idTweetRelacionado);
+    insertAsLastChild(div,divTweet);
+
+    var tweet = divTweet;
+    var id = json.idTweetRelacionado;
+
+    twttr.widgets.createTweet(
+      id, tweet, 
+      {
+        conversation : 'none',    // or all
+        cards        : 'hidden',  // or visible 
+        linkColor    : '#cc0000', // default is blue
+        theme        : 'light'    // or dark
+      })
+    .then (function (el) {
+      //el.contentDocument.querySelector(".footer").style.display = "none";
+    });
+}
+
 function JSON(){
     var idTweet = $("input[name='idTweet']").value;
     fetch('extraetweet?action=listaResultados&idTweet='+idTweet,{credentials: 'same-origin'})
@@ -41,6 +63,16 @@ function JSON(){
         }
         else{
             $(".lead").innerHTML = responseAsJson.texto;
+            var divTweets = $(".tweets-comunidad");
+            for(var i = 0; i < responseAsJson.tweetsRelacionados.length; i++){ //Controlamos que no imprima el mismo tweet analizado
+                if(responseAsJson.idTweet == responseAsJson.tweetsRelacionados[i] && i == responseAsJson.tweetsRelacionados.length-1){
+                    break;
+                }else if(responseAsJson.idTweet == responseAsJson.tweetsRelacionados[i]){
+                    i++;
+                }
+                else{dibujaTweetsComunidad(divTweets,responseAsJson.tweetsRelacionados[i]);}
+            }
+            
         }
 	})
 	.catch(function(error){
@@ -55,21 +87,7 @@ function JSON(){
  * Iniciar todos los elementos
 */
 function init(){
-    /** 
-    twttr.widgets.createTimeline(
-    {
-        sourceType: "collection",
-        id: "539487832448843776",
-    },
-    document.getElementById("container"),
-    {
-        height: 400,
-        chrome: "nofooter",
-        linkColor: "#820bbb",
-        borderColor: "#a80000"
-    }
-    );
-    */
+
     JSON();
 	
 }

@@ -93,6 +93,7 @@ public class TweetController extends HttpServlet{
 			json.put("fechaRegistro", tweet.getFecha_registro());
 			//json.put("userMentionEntities", status.getUserMentionEntities());
 			json.put("usuario", tweet.getAutor());
+			json.put("nombrePerfil",tweet.getNombrePerfil());
 			json.put("localizacion", tweet.getLocalizacion());
 			/**
 			URLEntity[] urls = status.getURLEntities();
@@ -131,10 +132,10 @@ public class TweetController extends HttpServlet{
 			JSONArray arrayTweetsRelacionados = new JSONArray();
 			for(int i = 0; i < tweet.getIdTweetsRelacionados().size(); i++){
 				JSONObject item = new JSONObject();
-				item.put("idTweetRelacionado"+(i), tweet.getIdTweetsRelacionados().get(i));
+				item.put("idTweetRelacionado", tweet.getIdTweetsRelacionados().get(i));
 				arrayTweetsRelacionados.put(item);
 			}
-			json.put("hashtags", arrayTweetsRelacionados);
+			json.put("tweetsRelacionados", arrayTweetsRelacionados);
 			
 /**
 			JSONArray array = new JSONArray();

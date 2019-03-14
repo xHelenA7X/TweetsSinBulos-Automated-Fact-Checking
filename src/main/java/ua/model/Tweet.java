@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -253,13 +254,18 @@ public class Tweet {
 			Query query = new Query(queryString);
 	        QueryResult result;
 	        result = tw.search(query);
-	        List<Status> tweets = result.getTweets();   
-
-	        for (Status tweet : tweets) {
-	            //log.warning("@" + tweet.getUser().getScreenName() + " - " +tweet.getCreatedAt()+" - "+ tweet.getText() + " _ " + tweet.getId());
-	            String id = Long.toString(tweet.getId());
-	            IdTweetsRelacionados.add(id);
+	        List<Status> tweets = result.getTweets();
+	        
+	        List<String> tweetObjects = new ArrayList<String>();
+	        for (Status tweet: tweets) {
+	        	if(!tweetObjects.contains(tweet.getText())) { //De esta forma controlo que no añada tweets repetidos en la busqueda
+	        		//log.warning("@" + tweet.getUser().getScreenName() + " - " +tweet.getCreatedAt()+" - "+ tweet.getText() + " _ " + tweet.getId());
+	        		tweetObjects.add(tweet.getText());
+	        		String id = Long.toString(tweet.getId());
+	        		IdTweetsRelacionados.add(id);	
+		        }
 	        }
+	        
 		} catch (TwitterException te) {
             te.printStackTrace();
             log.warning("Failed to search tweets: " + te.getMessage());
