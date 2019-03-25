@@ -33,29 +33,18 @@ import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
 import ua.dao.TweetDao;
 import ua.model.Tweet;
+import ua.util.TweetConfiguration;
 
 @WebServlet(name="extraetweet",urlPatterns={"/extraetweet"})
 public class TweetController extends HttpServlet{
 	private static final Logger log = Logger.getLogger(TweetController.class.getName());
-	private static ConfigurationBuilder cb;
-	private static TwitterFactory f;
-	private static Twitter tw;
-	private static List<String> nombresComunes;
+	private Twitter tw;
 	private TweetDao dao;
 
-	private static void Tokens() {
-		cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthConsumerKey("QmLdCybkqumf2JOQr1E0ZLxWo")
-								.setOAuthConsumerSecret("Ze8lAGSxz9NTWNZIbqeOrwzFau4N6b0kAoxwiijNKAHtircdfH")
-								.setOAuthAccessToken("1096330876705755136-vq4PO4Oe1kLsMZw6ZUtX7hyC8MgW97")
-								.setOAuthAccessTokenSecret("QgDZ8tRc0ZEpMF5R2Rv3veZTrXx4vMZANdCVTMB1jeyPg");
-		f = new TwitterFactory(cb.build());
-		tw = f.getInstance();
-		nombresComunes = new ArrayList<String>();
-	}
 	public TweetController() {
 		super();
 		 dao = new TweetDao();
+		 tw = TweetConfiguration.getInstance();
 	}
 	
 	private String extraerId(String url) {
@@ -88,13 +77,10 @@ public class TweetController extends HttpServlet{
 		
 		try {
 			Status status = tw.showStatus(id_long);
-			
 			json.put("fechaCreacion", tweet.getFecha_publicacion());
 			json.put("fechaRegistro", tweet.getFecha_registro());
 			//json.put("userMentionEntities", status.getUserMentionEntities());
 			json.put("usuario", tweet.getAutor());
-			json.put("nombrePerfil",tweet.getNombrePerfil());
-			json.put("localizacion", tweet.getLocalizacion());
 			/**
 			URLEntity[] urls = status.getURLEntities();
 			if(urls != null){
@@ -161,14 +147,15 @@ public class TweetController extends HttpServlet{
 		try {
 			Status status = tw.showStatus(id_long);
 			String idTweet = Long.toString(status.getId());
-			String nombrePerfil = status.getUser().getScreenName();
-			String autor = status.getUser().getName();
+			String autor = status.getUser().getScreenName();
 			String texto = status.getText();
 			String idioma = status.getLang();
-			String localizacion = status.getUser().getLocation();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 			String fechaPublicacion = dateFormat.format(status.getCreatedAt());
-			tweet = new Tweet(idTweet,nombrePerfil,autor,texto,idioma,fechaPublicacion,localizacion);
+			tweet = new Tweet(idTweet,autor,texto,idioma,fechaPublicacion);
+			
+			//Añadimos al autor/a
+			
 			
 			
 		} catch (TwitterException e) {
@@ -199,7 +186,6 @@ public class TweetController extends HttpServlet{
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 Tokens();
 		 String url = request.getParameter("UrlTweet");
 		 String id = extraerId(url);
 		 Tweet tweet = dao.getTweetById(id);

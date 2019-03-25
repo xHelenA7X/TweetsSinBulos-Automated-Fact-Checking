@@ -22,20 +22,18 @@ public class TweetDao {
     public void addTweet(Tweet af) {
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("insert into Tweet(idTweet,nombrePerfil,autor,texto,textoPlano,idioma,localizacion,"
-                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+                    .prepareStatement("insert into Tweet(idTweet,texto,textoPlano,idioma,"
+                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados,fk_autor) values (?,?, ?, ?, ?, ?, ?, ?, ? )");
             // Parameters start with 1
             preparedStatement.setString(1, af.getIdTweet());
-            preparedStatement.setString(2, af.getNombrePerfil());
-            preparedStatement.setString(3, af.getAutor());
-            preparedStatement.setString(4, af.getTexto());
-            preparedStatement.setString(5, af.getTextoPlano());
-            preparedStatement.setString(6, af.getIdioma());
-            preparedStatement.setString(7, af.getLocalizacion());
-            preparedStatement.setString(8, af.getVeracidad());
-            preparedStatement.setString(9, af.getFecha_registro());
-            preparedStatement.setString(10, af.getFecha_publicacion());
-            preparedStatement.setString(11, af.getIdTweetsRelacionados().toString());
+            preparedStatement.setString(2, af.getTexto());
+            preparedStatement.setString(3, af.getTextoPlano());
+            preparedStatement.setString(4, af.getIdioma());
+            preparedStatement.setString(5, af.getVeracidad());
+            preparedStatement.setString(6, af.getFecha_registro());
+            preparedStatement.setString(7, af.getFecha_publicacion());
+            preparedStatement.setString(8, af.getIdTweetsRelacionados().toString());
+            preparedStatement.setString(9, af.getAutor());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -74,7 +72,7 @@ public class TweetDao {
         }
     }
 
-    public List<Tweet> getAllUsers() {
+    public List<Tweet> getAllTweets() {
         List<Tweet> Tweetes = new ArrayList<Tweet>();
         try {
             Statement statement = connection.createStatement();
@@ -105,12 +103,10 @@ public class TweetDao {
 
             if (rs.next()) {
                 af.setIdTweet(rs.getString("idTweet"));
-                af.setNombrePerfil(rs.getString("nombrePerfil"));
                 af.setAutor(rs.getString("autor"));
                 af.setTexto(rs.getString("texto"));
                 af.setTextoPlano(rs.getString("textoPlano"));
                 af.setIdioma(rs.getString("idioma"));
-                af.setLocalizacion(rs.getString("localizacion"));
                 af.setVeracidad(rs.getString("veracidad"));
                 af.setFecha_registro(rs.getString("fecha_registro"));
                 af.setFecha_publicacion(rs.getString("fecha_publicacion"));

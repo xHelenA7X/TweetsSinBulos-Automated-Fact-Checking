@@ -26,43 +26,28 @@ import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
 import ua.controller.TweetController;
 import ua.dao.TweetDao;
+import ua.util.TweetConfiguration;
 
 public class Tweet {
 	private static final Logger log = Logger.getLogger(TweetController.class.getName());
 	private String idTweet;
 	private String autor;
-	private String nombrePerfil;
     private String texto;
     private String fecha_publicacion;
     private String fecha_registro;
     private String veracidad;
     private String textoPlano;
     private String idioma;
-    private String localizacion;
 	private List<String> IdTweetsRelacionados;
-    private static ConfigurationBuilder cb;
-	private static TwitterFactory f;
 	private static Twitter tw;
 	
 
-	private static void Tokens() {
-		cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthConsumerKey("QmLdCybkqumf2JOQr1E0ZLxWo")
-								.setOAuthConsumerSecret("Ze8lAGSxz9NTWNZIbqeOrwzFau4N6b0kAoxwiijNKAHtircdfH")
-								.setOAuthAccessToken("1096330876705755136-vq4PO4Oe1kLsMZw6ZUtX7hyC8MgW97")
-								.setOAuthAccessTokenSecret("QgDZ8tRc0ZEpMF5R2Rv3veZTrXx4vMZANdCVTMB1jeyPg");
-		f = new TwitterFactory(cb.build());
-		tw = f.getInstance();
-	
-	}
-	
 	public Tweet() {
-		
+		tw = TweetConfiguration.getInstance();
 	}
     
-    public Tweet(String idTweet,String nombrePerfil,String autor, String texto, String idioma,String fecha_publicacion,String localizacion) {
+    public Tweet(String idTweet,String autor, String texto, String idioma,String fecha_publicacion) {
 		this.idTweet = idTweet;
-    	this.nombrePerfil = nombrePerfil;
 		this.autor = autor;
 		this.texto = texto;
 		this.convierteTextoPlano();
@@ -71,8 +56,7 @@ public class Tweet {
 		this.fecha_registro= new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 		IdTweetsRelacionados = new ArrayList<String>();
 		this.idioma=idioma;
-		this.localizacion = localizacion;
-		Tokens();
+		tw = TweetConfiguration.getInstance();
 		anotaTexto();
 	}
     
@@ -83,14 +67,6 @@ public class Tweet {
 	public void setIdTweet(String idTweet) {
 		this.idTweet = idTweet;
 	}    
-	
-	public String getNombrePerfil() {
-		return nombrePerfil;
-	}
-
-	public void setNombrePerfil(String nombrePerfil) {
-		this.nombrePerfil = nombrePerfil;
-	}
     
 	public String getAutor() {
 		return autor;
@@ -146,14 +122,6 @@ public class Tweet {
 
 	public void setVeracidad(String veracidad) {
 		this.veracidad = veracidad;
-	}
-	
-	public String getLocalizacion() {
-		return localizacion;
-	}
-
-	public void setLocalizacion(String localizacion) {
-		this.localizacion = localizacion;
 	}
 	
 	public List<String> getIdTweetsRelacionados() {

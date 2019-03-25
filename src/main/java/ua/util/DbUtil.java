@@ -38,23 +38,37 @@ public class DbUtil {
 				metadata = connection.getMetaData();
 
 				resultSet = metadata.getTables(null, "factchecking", "Tweet", null);
-				// Si la tabla 'Tweet' no existe, la creamos
+				// Si la tabla 'Tweet' no existe, inicializamos la bd
 				if (!resultSet.next()) {
 					connection.createStatement().executeUpdate(
+					"CREATE TABLE `factchecking`.`Autor` (\n" + 
+					"  `nombrePerfil` varchar(45) NOT NULL,\n" +
+					"  `idAutor` varchar(50) NOT NULL,\n" +
+					"  `alias` VARCHAR(50) NOT NULL,\n" + 
+					"  `descripcion` varchar(500) NOT NULL,\n"+
+					"  `localizacion` VARCHAR(45),\n" + 
+					"  `cuentaVerificada` VARCHAR(5) NOT NULL,\n" +
+					"  `temaPorDefecto` varchar(5) NOT NULL,"+
+					"  `imagenPorDefecto` varchar(5) NOT NULL,"+
+					"  `antesBulo` VARCHAR(5) NOT NULL,\n" +
+					"   PRIMARY KEY (`nombrePerfil`));\n"
+					+		
 					"CREATE TABLE `factchecking`.`Tweet` (\n" + 
 					"  `idTweet` VARCHAR(50) NOT NULL,\n" + 
-					"  `nombrePerfil` VARCHAR(45) NOT NULL,\n" +
-					"  `autor` VARCHAR(45) NOT NULL,\n" + 
+					"  `nombrePerfil` VARCHAR(45) NOT NULL,\n" + 
 					"  `texto` VARCHAR(500) NOT NULL,\n" +
 					"  `textoPlano` VARCHAR(500) NOT NULL,\n" +
 					"  `idioma` VARCHAR(2) NOT NULL,\n" + 
-					"  `localizacion` VARCHAR(45) NOT NULL,\n" +
 					"  `veracidad` VARCHAR(45),\n" + 
 					"  `fecha_registro` VARCHAR(45) NOT NULL,\n" +
 					"  `fecha_publicacion` VARCHAR(45) NOT NULL,\n" +
 					"  `tweets_relacionados` VARCHAR(500) NOT NULL,\n" +
-					"  PRIMARY KEY (`idTweet`));\n" + 
-					"");
+					"   `fk_autor` varchar(45) NOT NULL,\n" +
+					"	PRIMARY KEY (`idTweet`)\n"+
+					"	KEY `fk_autor_idx` (`fk_autor`),\n" +
+					"   CONSTRAINT `fk_autor` FOREIGN KEY (`fk_autor`) REFERENCES `Autor` (`nombrePerfil`) ON DELETE NO ACTION ON UPDATE NO ACTION"+
+					"   );\n"
+					);
 				}
 				resultSet.close();
 			} catch (SQLException e) {
