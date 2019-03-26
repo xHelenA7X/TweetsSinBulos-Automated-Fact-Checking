@@ -31,7 +31,9 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
+import ua.dao.AutorDao;
 import ua.dao.TweetDao;
+import ua.model.Autor;
 import ua.model.Tweet;
 import ua.util.TweetConfiguration;
 
@@ -40,10 +42,12 @@ public class TweetController extends HttpServlet{
 	private static final Logger log = Logger.getLogger(TweetController.class.getName());
 	private Twitter tw;
 	private TweetDao dao;
+	private AutorDao daoAutor;
 
 	public TweetController() {
 		super();
 		 dao = new TweetDao();
+		 daoAutor = new AutorDao();
 		 tw = TweetConfiguration.getInstance();
 	}
 	
@@ -147,15 +151,26 @@ public class TweetController extends HttpServlet{
 		try {
 			Status status = tw.showStatus(id_long);
 			String idTweet = Long.toString(status.getId());
-			String autor = status.getUser().getScreenName();
+			String idAutor = Long.toString(status.getUser().getId());
 			String texto = status.getText();
 			String idioma = status.getLang();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 			String fechaPublicacion = dateFormat.format(status.getCreatedAt());
-			tweet = new Tweet(idTweet,autor,texto,idioma,fechaPublicacion);
+			tweet = new Tweet(idTweet,idAutor,texto,idioma,fechaPublicacion);
 			
-			//Añadimos al autor/a
+			//Extraemos los campos del autor/a
+			String perfilAutor = status.getUser().getScreenName();
+			String alias = status.getUser().getName();
+			String descripcion = status.getUser().getDescription();
+			String localizacion = status.getUser().getLocation();
+			String esVerificada = Boolean.toString(status.getUser().isVerified());
+			String esTemaPorDefecto = Boolean.toString(status.getUser().isDefaultProfile());
+			String esImagenPorDefecto = Boolean.toString(status.getUser().isDefaultProfileImage());
 			
+			if(daoAutor.getAutorById(idAutor).getAlias() == null) { //Si el autor del tweet no existe
+				Autor autor = new Autor(idAutor,perfilAutor,alias,descripcion,localizacion,esVerificada,esTemaPorDefecto,esImagenPorDefecto);
+				daoAutor.addAutor(autor);
+			}
 			
 			
 		} catch (TwitterException e) {
@@ -193,7 +208,7 @@ public class TweetController extends HttpServlet{
 		 if(tweet.getIdTweet() == null){
 			 //Ese tuit no ha sido registrado todavia
 			 tweet = extraeCamposTweet(id);
-			 dao.addTweet(tweet);
+			 dao.addTweet(tweet); //Añadimos el tweet a la bd
 		 }
 		 
 	     RequestDispatcher view = request.getRequestDispatcher("salida.jsp");

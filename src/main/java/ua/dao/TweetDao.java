@@ -23,7 +23,7 @@ public class TweetDao {
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into Tweet(idTweet,texto,textoPlano,idioma,"
-                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados,fk_autor) values (?,?, ?, ?, ?, ?, ?, ?, ? )");
+                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados,autor) values (?,?, ?, ?, ?, ?, ?, ?, ? )");
             // Parameters start with 1
             preparedStatement.setString(1, af.getIdTweet());
             preparedStatement.setString(2, af.getTexto());

@@ -97,7 +97,10 @@
 						<div class="col-md-6">
 							<div class="section-header">
 								<h2>Afirmación analizada:</h2>
-								<p class="lead">"Hola"</p>
+                                <p class="lead"></p>
+                                <i><small>Nota: Que la afirmación contenga errores ortográficos puede influir negativamente en la búsqueda. Asegúrese de que gramaticalmente
+                                     el texto en cuestión es correcto.</small>
+                                </i>
 							</div>
 	
 							<!-- feature -->

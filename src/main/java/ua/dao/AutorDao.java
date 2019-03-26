@@ -23,7 +23,7 @@ public class AutorDao {
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into Autor(idAutor,nombrePerfil,alias,descripcion,"
-                    		+ "localizacion,cuentaVerificada,temaPorDefecto,imagenPorDefecto,antesBulo) values (?,?, ?, ?, ?, ?, ?, ?, ? )");
+                    		+ "localizacion,cuentaVerificada,temaPorDefecto,imagenPorDefecto,antesBulo) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             // Parameters start with 1
             preparedStatement.setString(1, af.getIdAutor());
             preparedStatement.setString(2, af.getNombrePerfil());

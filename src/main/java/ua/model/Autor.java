@@ -12,8 +12,8 @@ public class Autor {
     private String imagenPorDefecto;
     private String antesBulo;
 
-	public Autor(String nombrePerfil, String idAutor, String alias, String descripcion, String localizacion,
-			String cuentaVerificada, String temaPorDefecto, String imagenPorDefecto, String antesBulo) {
+	public Autor(String idAutor, String nombrePerfil, String alias, String descripcion, String localizacion,
+			String cuentaVerificada, String temaPorDefecto, String imagenPorDefecto) {
 		this.nombrePerfil = nombrePerfil;
 		this.idAutor = idAutor;
 		this.alias = alias;
@@ -22,7 +22,7 @@ public class Autor {
 		this.cuentaVerificada = cuentaVerificada;
 		this.temaPorDefecto = temaPorDefecto;
 		this.imagenPorDefecto = imagenPorDefecto;
-		this.antesBulo = antesBulo;
+		this.antesBulo = "false";
 	}
 	
 	public Autor() {
