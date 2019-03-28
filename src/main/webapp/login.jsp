@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>TweetCheck. Es lo que verdaderamente está pasando.</title>
+		<title>Es lo que verdaderamente está pasando.</title>
 
 		<!-- Google font -->
 		<link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
@@ -78,17 +78,18 @@
 					<div class="row">
 						<div class="col-md-8">    
                             <h1 class="white-text">Login Administrador</h1>
-                            <form method="POST" action='main?action=login' name="main">
+                            <form method="POST" action='login?key=x' name="main">
                                 <label for="campos"><b>Introduzca los campos solicitados.</b></label>
                                 <input type="text" placeholder="Introduce tu DNI/NIE" name="dni" required>
                                 <input type="password" placeholder="Introduce tu contraseña" name="psw" required>
                                 
                                 <button type="submit" class="main-button icon-button">Iniciar Sesión</button>
                             </form>
+                            <p style="color:white;">${mensaje}</p>
 						</div>
 					</div>
 				</div>
-			</div>
+            </div>
         </div>
 		<footer id="footer" class="section">
 
