@@ -1,5 +1,6 @@
 package ua.model;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ public class Tweet {
     private String idioma;
 	private List<String> IdTweetsRelacionados;
 	private static Twitter tw;
+	private FreelingXML fxml;
 	
 
 	public Tweet() {
@@ -57,6 +59,7 @@ public class Tweet {
 		IdTweetsRelacionados = new ArrayList<String>();
 		this.idioma=idioma;
 		tw = TweetConfiguration.getInstance();
+		fxml = new FreelingXML();
 		anotaTexto();
 	}
     
@@ -187,34 +190,16 @@ public class Tweet {
 	}
 	
 	private void anotaTexto(){
-		List<String> nombresComunes = new ArrayList<>();
-		String []arrayTexto = this.textoPlano.split(" ");
-		
-		TreeTaggerWrapper tt = new TreeTaggerWrapper<String>();
 		try {
-			
-			switch(this.idioma){
-			case "en":
-				tt.setModel("english.par");
-			default:
-				tt.setModel("spanish.par");
-			}
-			tt.setHandler(new TokenHandler<String>() {
-				public void token(String token, String pos, String lemma) {
-						//log.warning(token + "\t" + pos + "\t" + lemma);
-						if(pos.equals("NC")) {
-							nombresComunes.add(token);
-						}
-				}
-			});
-			tt.process(Arrays.asList(arrayTexto));
-			buscaTweetsRelacionados(nombresComunes);
-		} catch (Exception e) {
-			log.warning("Excepcion TreeTagger: " + e.toString());
+			fxml.generaFicheroEntrada(idTweet, textoPlano);
+			fxml.generaFicheroSalida(idTweet);
+			fxml.extraeEtiquetas(idTweet+"-salida.xml");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		finally{
-			tt.destroy();
-		}		
+		buscaTweetsRelacionados(fxml.getNC());
+				
 	}
 	
 	private void extraeIdTweetsRelacionados(String queryString) {
