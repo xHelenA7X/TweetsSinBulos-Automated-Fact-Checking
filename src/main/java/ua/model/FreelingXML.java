@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import ua.controller.TweetController;
 import ua.util.Pair;
 
 public class FreelingXML {	
@@ -23,6 +25,7 @@ public class FreelingXML {
 	List<Pair<String, String>> Verbos; //Vector de pares ya que almacenare verbo conjugado y su infinitivo
 	private List<String> AdvAfirmativos;
 	private List<String> AdvNegativos;
+	private static final Logger log = Logger.getLogger(FreelingXML.class.getName());
 	
 	public FreelingXML() {	
 		NC = new ArrayList<String>();
@@ -40,6 +43,11 @@ public class FreelingXML {
 		if(!archivo.exists()) {
 		    // El fichero no existe todavia en el servidor
 			bw = new BufferedWriter(new FileWriter(archivo));
+			int longitud = texto.length();
+			char ultimo = texto.charAt(longitud-1);
+			if(ultimo != '.') {
+				texto+=".";
+			}
 			bw.write(texto);
 			bw.close();
 		}
@@ -48,12 +56,37 @@ public class FreelingXML {
 	
 	public void generaFicheroSalida(String idTweet) {
         // Contiene la instruccion a ejecutar
-        String comando = "analyzer_client localhost:5000 < /etc/tweets/"+idTweet+".txt > "+idTweet+"-salida.xml";
-
+        String comando = "analyzer_client localhost:5000 < /etc/tweets/1102636412334149634.txt > /etc/tweets/1102636412334149634-salida.xml";
         try
         {
             Runtime r = Runtime.getRuntime();
             Process p = r.exec(comando);
+            // Inicializa el lector del buffer
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String resultado = "";
+            String inputLine;
+            // Bucle mientas reciba parametros del buffer
+            while ((inputLine = in.readLine()) != null)
+            {
+            	if(!inputLine.contains("OUTPUT")) {
+	            	// Si deseamos capturar el resultado para posteriormente
+	                // utilizarlo en nuestra aplicacion
+	                resultado += inputLine;
+            	}
+            }
+            in.close();
+            
+	        //escribimos el resultado
+	        String ruta = "/etc/tweets/"+idTweet+"-salida.xml";
+			File archivo = new File(ruta);
+			BufferedWriter bw;
+			if(!archivo.exists()) {
+			    // El fichero no existe todavia en el servidor
+				bw = new BufferedWriter(new FileWriter(archivo));
+				bw.write(resultado);
+				bw.close();
+			}
+			
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -98,10 +131,10 @@ public class FreelingXML {
 
 		    }
 		} catch (JDOMException e) {
-		    System.out.println("Ficherono valido");
+		    System.out.println("Fichero no valido");
 		    e.printStackTrace();
 		} catch (IOException e) {
-		    System.out.println("Ficheroalido");
+		    System.out.println("Fichero no valido");
 		    e.printStackTrace();
 		}
 	}

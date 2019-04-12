@@ -18,6 +18,7 @@ import twitter4j.HashtagEntity;
 import twitter4j.JSONArray;
 import twitter4j.JSONObject;
 import twitter4j.Query;
+import twitter4j.Query.ResultType;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -198,13 +199,22 @@ public class Tweet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		List<String> lista = fxml.getNC();
+		
+		log.warning("size: " + lista.size());
+		for(int i = 0; i < lista.size(); i++) {
+			log.warning(lista.get(i));
+		}
 		buscaTweetsRelacionados(fxml.getNC());
 				
 	}
 	
 	private void extraeIdTweetsRelacionados(String queryString) {
 		try {
-			Query query = new Query(queryString);
+			Query query = new Query();
+			query.setQuery(queryString);
+			query.resultType(ResultType.mixed);
+			query.setCount(20);
 	        QueryResult result;
 	        result = tw.search(query);
 	        List<Status> tweets = result.getTweets();
@@ -218,6 +228,14 @@ public class Tweet {
 	        		IdTweetsRelacionados.add(id);	
 		        }
 	        }
+	        queryString = "celebración";
+	        List<Status> statusList = tw.getUserTimeline("maldita_es");
+	         for (Status status : statusList) {
+	            System.out.println(status.getText());
+	          if(status.getText().toLowerCase().contains(queryString)){
+	            System.out.println(status.getUser().getName() + " : " + status.getText());
+	          }
+	         } 
 	        
 		} catch (TwitterException te) {
             te.printStackTrace();
