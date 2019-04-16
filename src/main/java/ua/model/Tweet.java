@@ -28,6 +28,7 @@ import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
 import ua.controller.TweetController;
 import ua.dao.TweetDao;
+import ua.util.FreelingXML;
 import ua.util.TweetConfiguration;
 
 public class Tweet {
@@ -42,7 +43,6 @@ public class Tweet {
     private String idioma;
 	private List<String> IdTweetsRelacionados;
 	private static Twitter tw;
-	private FreelingXML fxml;
 	
 
 	public Tweet() {
@@ -60,8 +60,8 @@ public class Tweet {
 		IdTweetsRelacionados = new ArrayList<String>();
 		this.idioma=idioma;
 		tw = TweetConfiguration.getInstance();
-		fxml = new FreelingXML();
-		anotaTexto();
+		generaFicheros();
+		anotaTexto(); //Analisis morfologico y extraer nombres comunes
 	}
     
 	public String getIdTweet() {
@@ -189,23 +189,21 @@ public class Tweet {
 		this.textoPlano = textoPlano.replace(";", "");
 		this.textoPlano = textoPlano.replace("#", "");
 	}
-	
-	private void anotaTexto(){
+	private void generaFicheros() {
+		//Primero hay que generar los archivos para el analisis
 		try {
-			fxml.generaFicheroEntrada(idTweet, textoPlano);
-			fxml.generaFicheroSalida(idTweet);
-			fxml.extraeEtiquetas(idTweet+"-salida.xml");
+			FreelingXML.generaFicheroEntrada(idTweet, textoPlano);
+			FreelingXML.generaFicheroSalida(idTweet);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		List<String> lista = fxml.getNC();
+	}
+	
+	private void anotaTexto(){
 		
-		log.warning("size: " + lista.size());
-		for(int i = 0; i < lista.size(); i++) {
-			log.warning(lista.get(i));
-		}
-		buscaTweetsRelacionados(fxml.getNC());
+		
+		//buscaTweetsRelacionados(fxml.getNC());
 				
 	}
 	
@@ -214,7 +212,7 @@ public class Tweet {
 			Query query = new Query();
 			query.setQuery(queryString);
 			query.resultType(ResultType.mixed);
-			query.setCount(20);
+			//query.setCount(20);
 	        QueryResult result;
 	        result = tw.search(query);
 	        List<Status> tweets = result.getTweets();
@@ -227,15 +225,7 @@ public class Tweet {
 	        		String id = Long.toString(tweet.getId());
 	        		IdTweetsRelacionados.add(id);	
 		        }
-	        }
-	        queryString = "celebración";
-	        List<Status> statusList = tw.getUserTimeline("maldita_es");
-	         for (Status status : statusList) {
-	            System.out.println(status.getText());
-	          if(status.getText().toLowerCase().contains(queryString)){
-	            System.out.println(status.getUser().getName() + " : " + status.getText());
-	          }
-	         } 
+	        } 
 	        
 		} catch (TwitterException te) {
             te.printStackTrace();
