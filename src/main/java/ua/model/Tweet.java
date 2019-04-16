@@ -43,6 +43,7 @@ public class Tweet {
     private String idioma;
 	private List<String> IdTweetsRelacionados;
 	private static Twitter tw;
+	private AnalisisMorfologico analisis;
 	
 
 	public Tweet() {
@@ -61,7 +62,7 @@ public class Tweet {
 		this.idioma=idioma;
 		tw = TweetConfiguration.getInstance();
 		generaFicheros();
-		anotaTexto(); //Analisis morfologico y extraer nombres comunes
+		generaSalida(); //Analisis morfologico y extraer nombres comunes
 	}
     
 	public String getIdTweet() {
@@ -200,9 +201,13 @@ public class Tweet {
 		}
 	}
 	
-	private void anotaTexto(){
-		
-		
+	private void generaSalida(){
+		analisis = new AnalisisMorfologico("/etc/tweets/"+idTweet+"-salida.xml",autor);
+		analisis.analisisMorfologicoTweet();
+		String conclusion = analisis.getConclusion();
+		String firmeza = analisis.getFirmeza();
+		log.warning(conclusion);
+		log.warning(firmeza);
 		//buscaTweetsRelacionados(fxml.getNC());
 				
 	}

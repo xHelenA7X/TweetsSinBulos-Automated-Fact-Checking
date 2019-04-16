@@ -8,6 +8,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+import ua.dao.FirmezaDao;
+
 /**
  * 
  * @author helena
@@ -52,12 +54,15 @@ public class AnalisisMorfologico {
 	private String firmeza;
 	private String conclusion;
 	private String rutaArchivoXML;
+	private FirmezaDao fd;
+	private String autorTweet;
 	
-	AnalisisMorfologico(String rutaArchivoXML){
+	AnalisisMorfologico(String rutaArchivoXML,String autorTweet){
 		frase = "";
 		conclusion = "";
 		firmeza = "";
 		this.rutaArchivoXML = rutaArchivoXML;
+		this.autorTweet = autorTweet;
 		tokens = new ArrayList<Element>();
 		this.extraeTokens();
 		this.extraeFrase();
@@ -66,6 +71,7 @@ public class AnalisisMorfologico {
 		adverbiosAquitar = new ArrayList<String>();
 		this.esFraseSubordinada();
 		tipoFrase=-1;
+		fd = new FirmezaDao();
 	}
 	
 	//Entiendase firmeza como la posicion que tiene el sujeto ante una afirmacion
@@ -90,8 +96,15 @@ public class AnalisisMorfologico {
 				}
 				else {
     				//Es un adverbio general, necesitamos respaldo de la bd
+					String adv_str = adverbio.getAttributeValue("lemma").toLowerCase();
 					//Consulta a la bd
-
+					Adverbio adv = fd.getAdverbioByNombre(adv_str);
+					if(adv.getFirmeza()!=null) {
+						posicionAfirmacionAdverbio = adv.getFirmeza();
+						if(posicionAfirmacionAdverbio.equals("niega")) {
+							adverbiosAquitar.add(adv_str);
+						}
+					}
     			}
    			}
     	}
@@ -171,7 +184,7 @@ public class AnalisisMorfologico {
 			
 			switch(tipoFrase) {
 			case 1: //afirma	
-				conclusion = "Se afirma que " + frase.toLowerCase() + ".";
+				conclusion = autorTweet + " afirma que " + frase.toLowerCase() + ".";
 				break;
 			case 2: //niega
 				if(adverbiosAquitar.size()>0) {
@@ -195,7 +208,7 @@ public class AnalisisMorfologico {
 						frase = frase.replace(" .", ".");
 					}
 				}
-				conclusion = "Se niega que " + frase.toLowerCase();
+				conclusion = autorTweet + " niega que " + frase.toLowerCase();
 				break;
 			}
 		}
@@ -281,6 +294,13 @@ public class AnalisisMorfologico {
 	    	//conclusion = extraeConclusion(tokens,tipo,true);
 	    	System.out.println(conclusion);
 	    }
+	}
+	
+	public String getFirmeza() {
+		return firmeza;
+	}
+	public String getConclusion() {
+		return conclusion;
 	}
 }
 	
