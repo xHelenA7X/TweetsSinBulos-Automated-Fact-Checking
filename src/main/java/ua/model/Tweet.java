@@ -27,6 +27,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
 import ua.controller.TweetController;
+import ua.dao.AutorDao;
 import ua.dao.TweetDao;
 import ua.util.FreelingXML;
 import ua.util.TweetConfiguration;
@@ -41,6 +42,7 @@ public class Tweet {
     private String veracidad;
     private String textoPlano;
     private String idioma;
+    private String conclusion;
 	private List<String> IdTweetsRelacionados;
 	private static Twitter tw;
 	private AnalisisMorfologico analisis;
@@ -54,6 +56,7 @@ public class Tweet {
 		this.idTweet = idTweet;
 		this.autor = autor;
 		this.texto = texto;
+		this.conclusion = "";
 		this.convierteTextoPlano();
 		this.fecha_publicacion = fecha_publicacion;
 		//Date myDate = new Date();
@@ -136,6 +139,13 @@ public class Tweet {
 	public void setIdTweetsRelacionados(List<String> tweets) {
 		this.IdTweetsRelacionados = tweets;
 	}
+	public String getConclusion() {
+		return conclusion;
+	}
+
+	public void setConclusion(String conclusion) {
+		this.conclusion = conclusion;
+	}
 	
 	public void setIdTweetsRelacionadosString(String tweets) {
 		ArrayList<String> p = new ArrayList<>();
@@ -201,14 +211,18 @@ public class Tweet {
 		}
 	}
 	
+	private String getNombreAutor(String id) {
+		AutorDao dao = new AutorDao();
+		Autor autor = dao.getAutorById(id);
+		return autor.getAlias();
+	}
+	
 	private void generaSalida(){
-		analisis = new AnalisisMorfologico("/etc/tweets/"+idTweet+"-salida.xml",autor);
+		analisis = new AnalisisMorfologico("/etc/tweets/"+idTweet+"-salida.xml",this.getNombreAutor(autor));
 		analisis.analisisMorfologicoTweet();
-		String conclusion = analisis.getConclusion();
-		String firmeza = analisis.getFirmeza();
-		log.warning(conclusion);
-		log.warning(firmeza);
-		//buscaTweetsRelacionados(fxml.getNC());
+		this.setConclusion(analisis.getConclusion());
+		buscaTweetsRelacionados(analisis.extraeNombresComunes()); //Primero buscamos solo con nombres comunes
+		buscaTweetsRelacionados(analisis.extraeVerbo()); //Ahora nombres comunes y verbo
 				
 	}
 	
@@ -228,7 +242,10 @@ public class Tweet {
 	        		//log.warning("@" + tweet.getUser().getScreenName() + " - " +tweet.getCreatedAt()+" - "+ tweet.getText() + " _ " + tweet.getId());
 	        		tweetObjects.add(tweet.getText());
 	        		String id = Long.toString(tweet.getId());
-	        		IdTweetsRelacionados.add(id);	
+	        		if(!IdTweetsRelacionados.contains(id) && !Long.toString(tweet.getUser().getId()).equals(autor)) { //Si ya esta en el array que no lo vuelva a añadir, o si el tweet proviene del mismo usuario
+	        			IdTweetsRelacionados.add(id);	
+	        		}
+	        		
 		        }
 	        } 
 	        
@@ -246,43 +263,8 @@ public class Tweet {
 		for(int i = 0; i < nombresComunes.size(); i++) {
 			cadenaCompleta+=nombresComunes.get(i)+" ";
 		}
-		/**
-		if(nombresComunes.size() < 5) {
-			int j = 0;
-			int i = j+1;
-			//log.warning("size: " + nombresComunes.size());
-	        while(j < nombresComunes.size()) {
-	        	queryString = nombresComunes.get(j) + " " + nombresComunes.get(i);
-	        	//log.warning(queryString);
-	        	cadenaCompleta+=nombresComunes.get(j) + " ";
-	        	//QueryTweets(queryString);
-	        	j++;
-	        	if(i+1 == nombresComunes.size()){i=0;}
-	        	else {i++;}
-	        }
-		}
-		else {
-			int j = 0;
-			int i = j+1;
-			int k = j+2;
-			//.warning("size: " + nombresComunes.size());
-			while(j < nombresComunes.size()) {
-				queryString = nombresComunes.get(j) + " " + nombresComunes.get(i)+ " " + nombresComunes.get(k);
-	        	//log.warning(queryString);
-	        	cadenaCompleta+=nombresComunes.get(j) + " ";
-	        	//QueryTweets(queryString);
-	        	j++;
-	        	if(i+1 == nombresComunes.size()){i=0;}
-	        	else { 
-	        		if(k+1 == nombresComunes.size()) {k=0;}
-	        	else{
-	        		i++;
-	        		k++;
-	        		}
-	        	}
-			}
-		}
-		**/
 		extraeIdTweetsRelacionados(cadenaCompleta);
 	}
+
+
 }

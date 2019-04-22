@@ -107,8 +107,8 @@
 							<div class="feature">
 								<i class="feature-icon fa fa-flask"></i>
 								<div class="feature-content">
-									<h4>Resultado</h4>
-									<p>Ceteros fuisset mei no, soleat epicurei adipiscing ne vis. Et his suas veniam nominati.</p>
+									<h4>¿Qué se afirma o niega?</h4>
+									<p class="conclusion"></p>
 								</div>
 							</div>
 							<!-- /feature -->

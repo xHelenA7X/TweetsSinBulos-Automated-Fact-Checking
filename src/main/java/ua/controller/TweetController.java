@@ -117,6 +117,7 @@ public class TweetController extends HttpServlet{
 			json.put("textoPlano", tweet.getTextoPlano());
 			json.put("texto", tweet.getTexto());
 			json.put("veracidad", tweet.getVeracidad());
+			json.put("conclusion", tweet.getConclusion());
 			
 			//insertamos los ids de los tweets relacionados
 			JSONArray arrayTweetsRelacionados = new JSONArray();

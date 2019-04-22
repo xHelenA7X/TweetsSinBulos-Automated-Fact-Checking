@@ -3,11 +3,13 @@ package ua.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+import ua.controller.TweetController;
 import ua.dao.FirmezaDao;
 
 /**
@@ -56,6 +58,7 @@ public class AnalisisMorfologico {
 	private String rutaArchivoXML;
 	private FirmezaDao fd;
 	private String autorTweet;
+	private static final Logger log = Logger.getLogger(AnalisisMorfologico.class.getName());
 	
 	AnalisisMorfologico(String rutaArchivoXML,String autorTweet){
 		frase = "";
@@ -65,7 +68,6 @@ public class AnalisisMorfologico {
 		this.autorTweet = autorTweet;
 		tokens = new ArrayList<Element>();
 		this.extraeTokens();
-		this.extraeFrase();
 		posAdverbios = new ArrayList<Integer>();
 		posVerbos = new ArrayList<Integer>();
 		adverbiosAquitar = new ArrayList<String>();
@@ -75,16 +77,20 @@ public class AnalisisMorfologico {
 	}
 	
 	//Entiendase firmeza como la posicion que tiene el sujeto ante una afirmacion
-	private String analisis() {
+	private String analisis(List<Element> tokens, boolean esSegundaParte) {
 		String posicionAfirmacionAdverbio = "afirma";
 		String posicionAfirmacionVerbo = "afirma";
 		String firmeza = "afirma";
+		
 		if(posVerbos.size() > 0) {
 			int posicion = posVerbos.get(0); //Aqui tendriamos que obtener el verbo y analizarlo
     		Element verbo = (Element) tokens.get(posVerbos.get(0));
     		String vString = verbo.getAttributeValue("lemma"); //Verbo en infinitivo
     		//Busqueda en la bd, si esta, lo que saque, si no, por defecto decimos que afirma
-    		//if(...=="niega"){
+    		Verbo vb = fd.getVerboByNombre(vString);
+    		if(vb.getFirmeza() != "") {
+    			posicionAfirmacionVerbo=vb.getFirmeza();
+    		}
     	}
     	if(posAdverbios.size() > 0) {
     		Element adverbio = null;
@@ -102,13 +108,23 @@ public class AnalisisMorfologico {
 					if(adv.getFirmeza()!=null) {
 						posicionAfirmacionAdverbio = adv.getFirmeza();
 						if(posicionAfirmacionAdverbio.equals("niega")) {
-							adverbiosAquitar.add(adv_str);
+							if(esSubordinada == -1) {
+								adverbiosAquitar.add(adv_str);
+							}
+							else {
+								if(esSegundaParte) {
+									adverbiosAquitar.add(adv_str);
+								}
+							}
 						}
 					}
     			}
    			}
     	}
-    	if(posicionAfirmacionAdverbio == "niega" && posicionAfirmacionVerbo == "afirma") {
+    	if(posicionAfirmacionAdverbio.equals("niega") && posicionAfirmacionVerbo.equals("afirma")) {
+    		firmeza = "niega";
+    	}
+    	if(posicionAfirmacionAdverbio.equals("afirma") && posicionAfirmacionVerbo.equals("niega")) {
     		firmeza = "niega";
     	}
     	return firmeza;
@@ -145,7 +161,7 @@ public class AnalisisMorfologico {
 	    	}
 		}
 	}
-	private void extraeFrase() {
+	private void extraeFrase(List<Element> tokens) {
 		for(int i = 0; i < tokens.size(); i++) {
 			String palabra = tokens.get(i).getAttributeValue("form");
 			if(i == tokens.size()-1 || palabra.equals(",") || palabra.equals(".")) {
@@ -156,21 +172,55 @@ public class AnalisisMorfologico {
 			}
 		}
 	}
+	private void construirFraseSinAdverbiosNegativos() {
+		if(adverbiosAquitar.size()>0) {
+			String partes[] = frase.split(" ");
+			for(int i = 0; i < adverbiosAquitar.size();i++) {
+				for(int j = 0; j < partes.length; j++) {
+					if(partes[j].toLowerCase().equals(adverbiosAquitar.get(i))) {
+						partes[j] = "";
+					}
+				}
+			}
+			//Reconstruimos la frase
+			frase = "";
+			for(int i = 0; i < partes.length;i++) {
+				frase+=partes[i]+" ";
+			}
+			frase = frase + ".";
+			if(frase.contains("  ")) {
+				frase = frase.replace("  ", " ");
+			}
+			if(frase.contains(" .")) {
+				frase = frase.replace(" .", ".");
+			}
+		}
+	}
 	
 	
 	private String extraeConclusion(boolean esSubordinada) {
 		
 		if(esSubordinada) {
+			if(frase.contains(",")) {
+				frase = frase.replace(",", "");
+			}
+			if(frase.contains(".")) {
+				frase = frase.replace(".", "");
+			}
 			switch(tipoFrase) {
-			case 1:
+			case 1: //Niega
+				conclusion = autorTweet + " niega que " + frase.toLowerCase() + ".";
 				break;
-			case 2:
+			case 2: //Niega
+				this.construirFraseSinAdverbiosNegativos();
+				conclusion = autorTweet + " niega que " + frase.toLowerCase();
 				break;
-			case 3:
+			case 3: //Afirma
+				conclusion = autorTweet + " afirma que " + frase.toLowerCase() + ".";
 				break;
-			case 4:
-				break;
-			default:
+			case 4: //Afirma
+				this.construirFraseSinAdverbiosNegativos();
+				conclusion = autorTweet + " afirma que " + frase.toLowerCase();
 				break;
 			}
 		}
@@ -187,27 +237,7 @@ public class AnalisisMorfologico {
 				conclusion = autorTweet + " afirma que " + frase.toLowerCase() + ".";
 				break;
 			case 2: //niega
-				if(adverbiosAquitar.size()>0) {
-					String partes[] = frase.split(" ");
-					for(int i = 0; i < adverbiosAquitar.size();i++) {
-						for(int j = 0; j < partes.length; j++) {
-							if(partes[j].toLowerCase().equals(adverbiosAquitar.get(i))) {
-								partes[j] = "";
-							}
-						}
-					}
-					frase = "";
-					for(int i = 0; i < partes.length;i++) {
-						frase+=partes[i]+" ";
-					}
-					frase = frase + ".";
-					if(frase.contains("  ")) {
-						frase = frase.replace("  ", " ");
-					}
-					if(frase.contains(" .")) {
-						frase = frase.replace(" .", ".");
-					}
-				}
+				this.construirFraseSinAdverbiosNegativos();
 				conclusion = autorTweet + " niega que " + frase.toLowerCase();
 				break;
 			}
@@ -249,10 +279,10 @@ public class AnalisisMorfologico {
 		if(esSubordinada == -1) { //No estamos ante una frase subordinada, suponemos que es unico verbo
 	    	posVerbos = this.anyadePosVerbos(tokens);
 		    posAdverbios = this.anyadePosAdverbios(tokens);
-	    	firmeza = this.analisis();
+	    	firmeza = this.analisis(this.tokens,false);
 	    	if(firmeza.equals("afirma")) {tipoFrase=1;}else {tipoFrase=2;}
+	    	this.extraeFrase(this.tokens);
 	    	conclusion = extraeConclusion(false);
-	    	System.out.println(conclusion);
 	    }
 	    else { //Frase subordinada
 	    	List<Element> antes = new ArrayList<Element>();
@@ -263,13 +293,12 @@ public class AnalisisMorfologico {
 	    	for(int i = esSubordinada+1; i<tokens.size();i++) {
 	    		despues.add(tokens.get(i));
 	    	}
-	    	tokens = despues;
 	    	posVerbos = this.anyadePosVerbos(antes);
 		    posAdverbios = this.anyadePosAdverbios(antes);
-	    	String firmezaAntes = this.analisis();
+	    	String firmezaAntes = this.analisis(antes,false);
 	    	posVerbos = this.anyadePosVerbos(despues);
 	    	posAdverbios = this.anyadePosAdverbios(despues);
-	    	String firmezaDespues = this.analisis();
+	    	String firmezaDespues = this.analisis(despues,true);
 	    	
 	    	//Ej: Fuentes no confirman que el limón produzca cáncer. Niegan que + despues
 	    	//Ej: Fuentes desmienten que el limón produzca cáncer. -> Niegan que + despues
@@ -291,9 +320,36 @@ public class AnalisisMorfologico {
 	    		firmeza = "afirma";
 	    		tipoFrase = 4;
 	    	}
-	    	//conclusion = extraeConclusion(tokens,tipo,true);
-	    	System.out.println(conclusion);
+	    	this.extraeFrase(despues);
+	    	conclusion = extraeConclusion(true);
+	    	tokens = despues; //Es la parte que toma importancia en la afirmacion
 	    }
+	}
+	
+	public List<String> extraeNombresComunes() {
+		Element e = null;
+		List<String> nombresComunes = new ArrayList<String>();
+		for(int i = 0; i < tokens.size(); i++) {
+			e = (Element) tokens.get(i);
+			String pos = e.getAttributeValue("pos");
+			if(pos.equals("noun")) {
+				nombresComunes.add(e.getAttributeValue("form"));
+			}
+		}
+		return nombresComunes;
+	}
+	
+	public List<String> extraeVerbo(){
+		Element e = null;
+		List<String> nombresComunes = new ArrayList<String>();
+		for(int i = 0; i < tokens.size(); i++) {
+			e = (Element) tokens.get(i);
+			String pos = e.getAttributeValue("pos");
+			if(pos.equals("noun") || pos.equals("verb")) {
+				nombresComunes.add(e.getAttributeValue("form"));
+			}
+		}
+		return nombresComunes;
 	}
 	
 	public String getFirmeza() {

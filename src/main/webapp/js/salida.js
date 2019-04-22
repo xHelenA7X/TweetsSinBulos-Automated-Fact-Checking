@@ -63,6 +63,7 @@ function JSON(){
         }
         else{
             $(".lead").innerHTML = responseAsJson.texto;
+            $(".conclusion").innerHTML = responseAsJson.conclusion;
             var divTweets = $(".tweets-comunidad");
             for(var i = 0; i < responseAsJson.tweetsRelacionados.length; i++){ //Controlamos que no imprima el mismo tweet analizado
                 if(responseAsJson.idTweet == responseAsJson.tweetsRelacionados[i] && i == responseAsJson.tweetsRelacionados.length-1){

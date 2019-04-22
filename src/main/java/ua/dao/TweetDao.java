@@ -23,7 +23,7 @@ public class TweetDao {
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into Tweet(idTweet,texto,textoPlano,idioma,"
-                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados,autor) values (?,?, ?, ?, ?, ?, ?, ?, ? )");
+                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados,autor,conclusion) values (?,?, ?, ?, ?, ?, ?, ?, ?, ?)");
             // Parameters start with 1
             preparedStatement.setString(1, af.getIdTweet());
             preparedStatement.setString(2, af.getTexto());
@@ -34,6 +34,7 @@ public class TweetDao {
             preparedStatement.setString(7, af.getFecha_publicacion());
             preparedStatement.setString(8, af.getIdTweetsRelacionados().toString());
             preparedStatement.setString(9, af.getAutor());
+            preparedStatement.setString(10, af.getConclusion());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -111,6 +112,7 @@ public class TweetDao {
                 af.setFecha_registro(rs.getString("fecha_registro"));
                 af.setFecha_publicacion(rs.getString("fecha_publicacion"));
                 af.setIdTweetsRelacionadosString(rs.getString("tweets_relacionados"));
+                af.setConclusion(rs.getString("conclusion"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

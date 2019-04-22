@@ -41,7 +41,7 @@ public class FirmezaDao {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-            	vb.setVerbo(rs.getString("adverbio"));
+            	vb.setVerbo(rs.getString("verbo"));
             	vb.setFirmeza(rs.getString("firmeza"));
             }
         } catch (SQLException e) {
