@@ -221,9 +221,13 @@ public class Tweet {
 		analisis = new AnalisisMorfologico("/etc/tweets/"+idTweet+"-salida.xml",this.getNombreAutor(autor));
 		analisis.analisisMorfologicoTweet();
 		this.setConclusion(analisis.getConclusion());
-		buscaTweetsRelacionados(analisis.extraeNombresComunes()); //Primero buscamos solo con nombres comunes
-		buscaTweetsRelacionados(analisis.extraeVerbo()); //Ahora nombres comunes y verbo
+		//buscaTweetsRelacionados(analisis.extraeNombresComunes()); //Primero buscamos solo con nombres comunes
+		//buscaTweetsRelacionados(analisis.extraeVerbo()); //Ahora nombres comunes y verbo
 				
+	}
+	
+	private void busquedaCorpusFakeNews() {
+		
 	}
 	
 	private void extraeIdTweetsRelacionados(String queryString) {

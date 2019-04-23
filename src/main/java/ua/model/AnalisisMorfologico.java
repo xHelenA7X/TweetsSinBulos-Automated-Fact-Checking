@@ -50,6 +50,10 @@ public class AnalisisMorfologico {
 	private List<Element> tokens;
 	private List<Integer> posAdverbios;
 	private List<Integer> posVerbos;
+	private List<String> verbosConjugados;
+	private List<String> verbosInfinitivo;
+	private List<String> nombresComunes;
+	private List<String> nombresPropios;
 	private int esSubordinada;
 	private int tipoFrase;
 	private String frase;
@@ -71,6 +75,10 @@ public class AnalisisMorfologico {
 		posAdverbios = new ArrayList<Integer>();
 		posVerbos = new ArrayList<Integer>();
 		adverbiosAquitar = new ArrayList<String>();
+		verbosConjugados = new ArrayList<String>();
+		verbosInfinitivo = new ArrayList<String>();
+		nombresComunes = new ArrayList<String>();
+		nombresPropios = new ArrayList<String>();
 		this.esFraseSubordinada();
 		tipoFrase=-1;
 		fd = new FirmezaDao();
@@ -324,32 +332,56 @@ public class AnalisisMorfologico {
 	    	conclusion = extraeConclusion(true);
 	    	tokens = despues; //Es la parte que toma importancia en la afirmacion
 	    }
+		this.extraeNombresComunes();
+		this.extraeNombresPropios();
+		this.extraeVerboInfinitivo();
+		this.extraeVerboConjugado();
 	}
 	
-	public List<String> extraeNombresComunes() {
+	public void extraeNombresComunes() {
 		Element e = null;
-		List<String> nombresComunes = new ArrayList<String>();
 		for(int i = 0; i < tokens.size(); i++) {
 			e = (Element) tokens.get(i);
 			String pos = e.getAttributeValue("pos");
-			if(pos.equals("noun")) {
+			String type = e.getAttributeValue("type");
+			if(pos.equals("noun") && type.equals("common")) {
 				nombresComunes.add(e.getAttributeValue("form"));
 			}
 		}
-		return nombresComunes;
 	}
 	
-	public List<String> extraeVerbo(){
+	public void extraeNombresPropios() {
 		Element e = null;
-		List<String> nombresComunes = new ArrayList<String>();
 		for(int i = 0; i < tokens.size(); i++) {
 			e = (Element) tokens.get(i);
 			String pos = e.getAttributeValue("pos");
-			if(pos.equals("noun") || pos.equals("verb")) {
-				nombresComunes.add(e.getAttributeValue("form"));
+			String type = e.getAttributeValue("type");
+			if(pos.equals("noun") && type.equals("proper")) {
+				nombresPropios.add(e.getAttributeValue("form"));
 			}
 		}
-		return nombresComunes;
+	}
+	
+	public void extraeVerboInfinitivo(){
+		Element e = null;
+		for(int i = 0; i < tokens.size(); i++) {
+			e = (Element) tokens.get(i);
+			String pos = e.getAttributeValue("pos");
+			if(pos.equals("verb")) {
+				verbosInfinitivo.add(e.getAttributeValue("lemma"));
+			}
+		}
+	}
+	
+	public void extraeVerboConjugado(){
+		Element e = null;
+		for(int i = 0; i < tokens.size(); i++) {
+			e = (Element) tokens.get(i);
+			String pos = e.getAttributeValue("pos");
+			if(pos.equals("verb")) {
+				verbosConjugados.add(e.getAttributeValue("form"));
+			}
+		}
 	}
 	
 	public String getFirmeza() {
@@ -357,6 +389,38 @@ public class AnalisisMorfologico {
 	}
 	public String getConclusion() {
 		return conclusion;
+	}
+
+	public List<String> getVerbosConjugados() {
+		return verbosConjugados;
+	}
+
+	public void setVerbosConjugados(List<String> verbosConjugados) {
+		this.verbosConjugados = verbosConjugados;
+	}
+
+	public List<String> getVerbosInfinitivo() {
+		return verbosInfinitivo;
+	}
+
+	public void setVerbosInfinitivo(List<String> verbosInfinitivo) {
+		this.verbosInfinitivo = verbosInfinitivo;
+	}
+
+	public List<String> getNombresComunes() {
+		return nombresComunes;
+	}
+
+	public void setNombresComunes(List<String> nombresComunes) {
+		this.nombresComunes = nombresComunes;
+	}
+
+	public List<String> getNombresPropios() {
+		return nombresPropios;
+	}
+
+	public void setNombresPropios(List<String> nombresPropios) {
+		this.nombresPropios = nombresPropios;
 	}
 }
 	
