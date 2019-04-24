@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -46,6 +48,8 @@ public class Tweet {
 	private List<String> IdTweetsRelacionados;
 	private static Twitter tw;
 	private AnalisisMorfologico analisis;
+	private CorpusFakeNews corpus;
+	private String salidaCorpus;
 	
 
 	public Tweet() {
@@ -57,6 +61,7 @@ public class Tweet {
 		this.autor = autor;
 		this.texto = texto;
 		this.conclusion = "";
+		this.salidaCorpus="";
 		this.convierteTextoPlano();
 		this.fecha_publicacion = fecha_publicacion;
 		//Date myDate = new Date();
@@ -65,7 +70,8 @@ public class Tweet {
 		this.idioma=idioma;
 		tw = TweetConfiguration.getInstance();
 		generaFicheros();
-		generaSalida(); //Analisis morfologico y extraer nombres comunes
+		generaSalida(); //Analisis morfologico de la oracion, extraer nombres comunes, propios, verbos...
+		busquedaCorpusFakeNews();
 	}
     
 	public String getIdTweet() {
@@ -217,17 +223,74 @@ public class Tweet {
 		return autor.getAlias();
 	}
 	
+	private List<String> unirListas(List<String> listOne, List<String> listTwo) {
+		List<String> unificada = new ArrayList<String>();
+		for(int i = 0; i < listOne.size(); i++) {
+			unificada.add(listOne.get(i));
+		}
+		for(int i = 0; i < listTwo.size(); i++) {
+			unificada.add(listTwo.get(i));
+		}
+		return unificada;
+	}
+	
 	private void generaSalida(){
 		analisis = new AnalisisMorfologico("/etc/tweets/"+idTweet+"-salida.xml",this.getNombreAutor(autor));
 		analisis.analisisMorfologicoTweet();
 		this.setConclusion(analisis.getConclusion());
-		//buscaTweetsRelacionados(analisis.extraeNombresComunes()); //Primero buscamos solo con nombres comunes
-		//buscaTweetsRelacionados(analisis.extraeVerbo()); //Ahora nombres comunes y verbo
-				
+		
+		buscaTweetsRelacionados(analisis.getNombresComunes()); //Primero buscamos solo con nombres comunes
+		buscaTweetsRelacionados(unirListas(analisis.getNombresComunes(), analisis.getVerbosConjugados())); //Ahora nombres comunes y verbo
+		buscaTweetsRelacionados(unirListas(analisis.getNombresPropios(), analisis.getNombresComunes()));
+		buscaTweetsRelacionados(unirListas(analisis.getNombresComunes(), analisis.getAdjetivos()));
 	}
 	
 	private void busquedaCorpusFakeNews() {
+		corpus = new CorpusFakeNews();
+		List<String> keywords = unirListas(analisis.getNombresComunes(), analisis.getNombresPropios());
 		
+		if(analisis.getAdjetivos().size()>0) {
+			keywords = unirListas(keywords,analisis.getAdjetivos());
+		}
+		
+		for(int i = 0; i < keywords.size(); i++) { //Busqueda de las keywords en el corpus
+			corpus.busquedaCorpusFakeNews(keywords.get(i));
+		}
+		List<Integer> coincidencias = new ArrayList<Integer>();
+		List<KeywordsCorpus> listKeywords = corpus.getKeywordsCorpus();
+		if(listKeywords.size()>0) {
+			
+			for(int i = 0; i < listKeywords.size(); i++) {
+				int coincide = 0;
+				int fila = listKeywords.get(i).getFila();
+				for(int j = 0; j < listKeywords.size(); j++) {
+					int fila2 = listKeywords.get(j).getFila();
+					if(fila == fila2) {
+						if(i != j) {
+							coincide++;
+						}
+					}
+				}
+				//Almacenamos la fila que tiene mas coincidencias con las keywords
+				coincidencias.add(coincide);
+			}
+			
+			int maximo_valor = Collections.max(coincidencias);
+			int index_of_maximo = coincidencias.indexOf(maximo_valor);
+			int numKeywords = keywords.size();
+			//Sacamos el porcentaje de coincidencia, minimo tienen que coincidir en un 70%
+			double coincidencia = (maximo_valor*100)/numKeywords;
+			
+			if(coincidencia > 70.0) {
+				int fila_noticia = listKeywords.get(index_of_maximo).getFila();
+				//mirar porque no añade tambien los adjetivos, extraer de aqui la fuente de la noticia
+			}
+			
+			
+		}
+		else {
+			salidaCorpus = "No se ha encontrado coincidencia en el corpus.";
+		}
 	}
 	
 	private void extraeIdTweetsRelacionados(String queryString) {
@@ -260,15 +323,14 @@ public class Tweet {
         }
 	}
 	
-	private void buscaTweetsRelacionados(List<String> nombresComunes) {
+	private void buscaTweetsRelacionados(List<String> keywords) {
 		String queryString = "";
 		String cadenaCompleta="";
-		
-		for(int i = 0; i < nombresComunes.size(); i++) {
-			cadenaCompleta+=nombresComunes.get(i)+" ";
+		if(keywords.size()>0) {
+		for(int i = 0; i < keywords.size(); i++) {
+			cadenaCompleta+=keywords.get(i)+" ";
 		}
 		extraeIdTweetsRelacionados(cadenaCompleta);
+		}
 	}
-
-
 }

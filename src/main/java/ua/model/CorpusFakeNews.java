@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -16,13 +17,11 @@ import org.apache.poi.ss.usermodel.Row;
 
 public class CorpusFakeNews {
 	private ArrayList<String[]> arrayDatosExcel;
-	private ArrayList<KeywordsCorpus> keywords;
-	String palabra;
+	private List<KeywordsCorpus> keywords;
 	
-	public CorpusFakeNews(String palabra) {
+	public CorpusFakeNews() {
 		arrayDatosExcel = readExcelFileToArray(new File("/etc/tweets/corpus/CorpusFakeNews.xls")); 
 		keywords = new ArrayList<KeywordsCorpus>();
-		this.palabra=palabra;
 	}
 	
 	
@@ -83,7 +82,7 @@ public class CorpusFakeNews {
 	    return arrayDatos;
     }
 	 
-	public void busquedaCorpusFakeNews() {
+	public void busquedaCorpusFakeNews(String palabra) {
         int fila = 0; //fila
         for (String[] next : arrayDatosExcel) {
         	//System.out.print("Array Row: " + r++ + " -> "); //Representa la fila
@@ -98,6 +97,7 @@ public class CorpusFakeNews {
             if(noticia.toLowerCase().contains(palabra) || titulo.toLowerCase().contains(palabra)) {
             	int numeroApariciones = contarPalabras(noticia.toLowerCase(), palabra);
             	KeywordsCorpus keyword = new KeywordsCorpus(palabra,fila,numeroApariciones);
+            	/**
             	if(keywords.size()>0) {
             		boolean repetido = false;
             		int pos=-1;
@@ -117,6 +117,8 @@ public class CorpusFakeNews {
             	else {
             		keywords.add(keyword);
             	}
+            	**/
+            	keywords.add(keyword);
             }
             fila++;
         }
@@ -154,6 +156,10 @@ public class CorpusFakeNews {
 	
 	public String[] obtenerColumnasByFila(int fila) {
 		return arrayDatosExcel.get(fila);
+	}
+	
+	public List<KeywordsCorpus> getKeywordsCorpus(){
+		return keywords;
 	}
 	
 }

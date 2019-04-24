@@ -54,6 +54,7 @@ public class AnalisisMorfologico {
 	private List<String> verbosInfinitivo;
 	private List<String> nombresComunes;
 	private List<String> nombresPropios;
+	private List<String> adjetivos;
 	private int esSubordinada;
 	private int tipoFrase;
 	private String frase;
@@ -79,6 +80,7 @@ public class AnalisisMorfologico {
 		verbosInfinitivo = new ArrayList<String>();
 		nombresComunes = new ArrayList<String>();
 		nombresPropios = new ArrayList<String>();
+		adjetivos = new ArrayList<String>();
 		this.esFraseSubordinada();
 		tipoFrase=-1;
 		fd = new FirmezaDao();
@@ -330,12 +332,13 @@ public class AnalisisMorfologico {
 	    	}
 	    	this.extraeFrase(despues);
 	    	conclusion = extraeConclusion(true);
-	    	tokens = despues; //Es la parte que toma importancia en la afirmacion
+	    	//tokens = despues; //Es la parte que toma importancia en la afirmacion
 	    }
 		this.extraeNombresComunes();
 		this.extraeNombresPropios();
 		this.extraeVerboInfinitivo();
 		this.extraeVerboConjugado();
+		this.extraeAdjetivos();
 	}
 	
 	public void extraeNombresComunes() {
@@ -345,7 +348,7 @@ public class AnalisisMorfologico {
 			String pos = e.getAttributeValue("pos");
 			String type = e.getAttributeValue("type");
 			if(pos.equals("noun") && type.equals("common")) {
-				nombresComunes.add(e.getAttributeValue("form"));
+				nombresComunes.add(e.getAttributeValue("form").toLowerCase());
 			}
 		}
 	}
@@ -357,7 +360,7 @@ public class AnalisisMorfologico {
 			String pos = e.getAttributeValue("pos");
 			String type = e.getAttributeValue("type");
 			if(pos.equals("noun") && type.equals("proper")) {
-				nombresPropios.add(e.getAttributeValue("form"));
+				nombresPropios.add(e.getAttributeValue("form").toLowerCase());
 			}
 		}
 	}
@@ -368,7 +371,7 @@ public class AnalisisMorfologico {
 			e = (Element) tokens.get(i);
 			String pos = e.getAttributeValue("pos");
 			if(pos.equals("verb")) {
-				verbosInfinitivo.add(e.getAttributeValue("lemma"));
+				verbosInfinitivo.add(e.getAttributeValue("lemma").toLowerCase());
 			}
 		}
 	}
@@ -379,7 +382,18 @@ public class AnalisisMorfologico {
 			e = (Element) tokens.get(i);
 			String pos = e.getAttributeValue("pos");
 			if(pos.equals("verb")) {
-				verbosConjugados.add(e.getAttributeValue("form"));
+				verbosConjugados.add(e.getAttributeValue("form").toLowerCase());
+			}
+		}
+	}
+	
+	public void extraeAdjetivos(){
+		Element e = null;
+		for(int i = 0; i < tokens.size(); i++) {
+			e = (Element) tokens.get(i);
+			String pos = e.getAttributeValue("pos");
+			if(pos.equals("adjetive")) {
+				adjetivos.add(e.getAttributeValue("form").toLowerCase());
 			}
 		}
 	}
@@ -393,6 +407,10 @@ public class AnalisisMorfologico {
 
 	public List<String> getVerbosConjugados() {
 		return verbosConjugados;
+	}
+	
+	public List<String> getAdjetivos() {
+		return adjetivos;
 	}
 
 	public void setVerbosConjugados(List<String> verbosConjugados) {
