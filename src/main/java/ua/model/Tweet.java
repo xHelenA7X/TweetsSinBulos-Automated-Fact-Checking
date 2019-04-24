@@ -50,7 +50,12 @@ public class Tweet {
 	private AnalisisMorfologico analisis;
 	private CorpusFakeNews corpus;
 	private String salidaCorpus;
-	
+	private String cuerpoNoticia;
+	private String tituloNoticia;
+	private String linkNoticia;
+	private String veracidadNoticia;
+	private String fuenteNoticia;
+
 
 	public Tweet() {
 		tw = TweetConfiguration.getInstance();
@@ -62,6 +67,11 @@ public class Tweet {
 		this.texto = texto;
 		this.conclusion = "";
 		this.salidaCorpus="";
+		cuerpoNoticia="";
+		tituloNoticia="";
+		linkNoticia="";
+		veracidadNoticia="";
+		fuenteNoticia="";
 		this.convierteTextoPlano();
 		this.fecha_publicacion = fecha_publicacion;
 		//Date myDate = new Date();
@@ -152,6 +162,54 @@ public class Tweet {
 	public void setConclusion(String conclusion) {
 		this.conclusion = conclusion;
 	}
+	
+	public String getSalidaCorpus() {
+		return salidaCorpus;
+	}
+
+	public void setSalidaCorpus(String salidaCorpus) {
+		this.salidaCorpus = salidaCorpus;
+	}
+
+	public String getCuerpoNoticia() {
+		return cuerpoNoticia;
+	}
+
+	public void setCuerpoNoticia(String cuerpoNoticia) {
+		this.cuerpoNoticia = cuerpoNoticia;
+	}
+
+	public String getTituloNoticia() {
+		return tituloNoticia;
+	}
+
+	public void setTituloNoticia(String tituloNoticia) {
+		this.tituloNoticia = tituloNoticia;
+	}
+
+	public String getLinkNoticia() {
+		return linkNoticia;
+	}
+
+	public void setLinkNoticia(String linkNoticia) {
+		this.linkNoticia = linkNoticia;
+	}
+
+	public String getVeracidadNoticia() {
+		return veracidadNoticia;
+	}
+
+	public void setVeracidadNoticia(String veracidadNoticia) {
+		this.veracidadNoticia = veracidadNoticia;
+	}
+	public String getFuenteNoticia() {
+		return veracidadNoticia;
+	}
+
+	public void setFuenteNoticia(String fuenteNoticia) {
+		this.fuenteNoticia = fuenteNoticia;
+	}
+
 	
 	public void setIdTweetsRelacionadosString(String tweets) {
 		ArrayList<String> p = new ArrayList<>();
@@ -266,9 +324,7 @@ public class Tweet {
 				for(int j = 0; j < listKeywords.size(); j++) {
 					int fila2 = listKeywords.get(j).getFila();
 					if(fila == fila2) {
-						if(i != j) {
-							coincide++;
-						}
+						coincide++;
 					}
 				}
 				//Almacenamos la fila que tiene mas coincidencias con las keywords
@@ -281,15 +337,33 @@ public class Tweet {
 			//Sacamos el porcentaje de coincidencia, minimo tienen que coincidir en un 70%
 			double coincidencia = (maximo_valor*100)/numKeywords;
 			
+			salidaCorpus = "No se ha encontrado coincidencia en el corpus.";
+			
 			if(coincidencia > 70.0) {
 				int fila_noticia = listKeywords.get(index_of_maximo).getFila();
-				//mirar porque no añade tambien los adjetivos, extraer de aqui la fuente de la noticia
+				tituloNoticia=corpus.getTituloByFila(fila_noticia);
+				cuerpoNoticia=corpus.getTextoNoticiaByFila(fila_noticia);
+				linkNoticia=corpus.getLinkByFila(fila_noticia);
+				veracidadNoticia = corpus.getVeracidadByFila(fila_noticia);
+				fuenteNoticia = corpus.getFuenteByFila(fila_noticia);
+				salidaCorpus="Noticia con procedencia " + fuenteNoticia + " encontrada.";
+				if(conclusion.contains("afirma")) {
+					if(veracidadNoticia.equals("True")) {
+						veracidad = "1.0";
+					}
+					else if(veracidadNoticia.equals("Fake")) {
+						veracidad = "0.0";
+					}
+				}
+				else if(conclusion.contains("niega")) {
+					if(veracidadNoticia.equals("Fake")) {
+						veracidad = "1.0";
+					}
+					else if(veracidadNoticia.equals("True")) {
+						veracidad = "0.0";
+					}
+				}
 			}
-			
-			
-		}
-		else {
-			salidaCorpus = "No se ha encontrado coincidencia en el corpus.";
 		}
 	}
 	

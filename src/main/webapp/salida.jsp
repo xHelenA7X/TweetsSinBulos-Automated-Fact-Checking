@@ -117,8 +117,13 @@
 							<div class="feature">
 								<i class="feature-icon fa fa-users"></i>
 								<div class="feature-content">
-									<h4>Expert Teachers</h4>
-									<p>Ceteros fuisset mei no, soleat epicurei adipiscing ne vis. Et his suas veniam nominati.</p>
+									<h4>¿Qué dicen los expertos?</h4>
+									<p class="e1"></p>
+									<p class="e2"></p>
+									<p class="e3"></p>
+									<p class="e4"></p>
+									<p class="e5"></p>
+									<p class="e6"></p>
 								</div>
 							</div>
 							<!-- /feature -->

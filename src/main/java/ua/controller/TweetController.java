@@ -118,6 +118,12 @@ public class TweetController extends HttpServlet{
 			json.put("texto", tweet.getTexto());
 			json.put("veracidad", tweet.getVeracidad());
 			json.put("conclusion", tweet.getConclusion());
+			json.put("tituloNoticia", tweet.getTituloNoticia());
+			json.put("cuerpoNoticia", tweet.getCuerpoNoticia());
+			json.put("linkNoticia", tweet.getLinkNoticia());
+			json.put("veracidadNoticia", tweet.getVeracidadNoticia());
+			json.put("salidaCorpus", tweet.getSalidaCorpus());
+			json.put("fuenteNoticia", tweet.getFuenteNoticia());
 			
 			//insertamos los ids de los tweets relacionados
 			JSONArray arrayTweetsRelacionados = new JSONArray();

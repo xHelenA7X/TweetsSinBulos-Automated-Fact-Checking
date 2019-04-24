@@ -23,7 +23,8 @@ public class TweetDao {
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into Tweet(idTweet,texto,textoPlano,idioma,"
-                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados,autor,conclusion) values (?,?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    		+ "veracidad,fecha_registro,fecha_publicacion,tweets_relacionados,autor,conclusion,tituloNoticia,cuerpoNoticia,linkNoticia,veracidadNoticia,salidaCorpus,fuenteNoticia)"
+                    		+ " values (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             // Parameters start with 1
             preparedStatement.setString(1, af.getIdTweet());
             preparedStatement.setString(2, af.getTexto());
@@ -35,6 +36,12 @@ public class TweetDao {
             preparedStatement.setString(8, af.getIdTweetsRelacionados().toString());
             preparedStatement.setString(9, af.getAutor());
             preparedStatement.setString(10, af.getConclusion());
+            preparedStatement.setString(11, af.getTituloNoticia());
+            preparedStatement.setString(12, af.getCuerpoNoticia());
+            preparedStatement.setString(13, af.getLinkNoticia());
+            preparedStatement.setString(14, af.getVeracidadNoticia());
+            preparedStatement.setString(15, af.getSalidaCorpus());
+            preparedStatement.setString(16, af.getFuenteNoticia());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -113,6 +120,12 @@ public class TweetDao {
                 af.setFecha_publicacion(rs.getString("fecha_publicacion"));
                 af.setIdTweetsRelacionadosString(rs.getString("tweets_relacionados"));
                 af.setConclusion(rs.getString("conclusion"));
+                af.setTituloNoticia(rs.getString("tituloNoticia"));
+                af.setCuerpoNoticia(rs.getString("cuerpoNoticia"));
+                af.setLinkNoticia(rs.getString("linkNoticia"));
+                af.setVeracidadNoticia(rs.getString("veracidadNoticia"));
+                af.setSalidaCorpus(rs.getString("salidaCorpus"));
+                af.setFuenteNoticia(rs.getString("fuenteNoticia"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
