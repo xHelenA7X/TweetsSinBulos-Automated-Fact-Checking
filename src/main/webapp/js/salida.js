@@ -98,6 +98,7 @@ function JSON(){
             	fin = "falsa";
             }
             $(".e4").innerHTML = "Título de la noticia "+fin+" en cuestión: " + responseAsJson.tituloNoticia;
+            $(".e5").setAttribute("href", responseAsJson.linkNoticia);
             $(".e5").innerHTML = "Link: " + responseAsJson.linkNoticia;
             $(".e6").innerHTML = responseAsJson.cuerpoNoticia;
             var divTweets = $(".tweets-comunidad");
