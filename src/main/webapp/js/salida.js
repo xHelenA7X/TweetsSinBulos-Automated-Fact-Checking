@@ -50,18 +50,6 @@ function dibujaTweetsComunidad(div,json){
     });
 }
 
-function conclusionExpertos(conclusion){
-	var array = conclusion.split(" ");
-	var posicion = array.indexOf("que");
-	var cadena = "";
-	
-	for(var i = posicion+1; i < array.length; i++){
-		cadena = cadena + array[i] + " ";
-	}
-	cadena = cadena.replace(".","");
-	return cadena;
-}
-
 function JSON(){
     var idTweet = $("input[name='idTweet']").value;
     fetch('extraetweet?action=listaResultados&idTweet='+idTweet,{credentials: 'same-origin'})
@@ -79,27 +67,27 @@ function JSON(){
             $(".conclusion").innerHTML = responseAsJson.conclusion;
             $(".e1").innerHTML = responseAsJson.salidaCorpus;
             var veracidad = responseAsJson.veracidad;
-            if(veracidad == "1.0"){
-            	$(".e2").innerHTML = "Lo que dice el autor del tweet es CIERTO.";	
-            }
-            else if(veracidad == "0.0"){
-            	$(".e2").innerHTML = "Lo que dice el autor del tweet es FALSO.";	
-            }
-            var veracidadNoticia = responseAsJson.veracidadNoticia;
             var fin = "";
             var strConclusionExpertos = conclusionExpertos(responseAsJson.conclusion);
             
-            if(veracidadNoticia == "True"){
-				$(".e3").innerHTML = "Que " + strConclusionExpertos + "ha sido catalogada por expertos como NOTICIA VERDADERA";
-				fin = "verdadera";
+            if(veracidad == "1.0"){
+            	$(".e2").innerHTML = "Lo que dice el autor del tweet es CIERTO.";	
+            	$(".e3").innerHTML = "Dicha noticia ha sido catalogada por expertos como NOTICIA FALSA";
+            	fin = "verdadera";
             }
-            else if(veracidadNoticia == "Fake"){
-            	$(".e3").innerHTML = "Que " + strConclusionExpertos + " ha sido catalogada por expertos como NOTICIA FALSA";
-            	fin = "falsa";
+            else if(veracidad == "0.0"){
+            	$(".e2").innerHTML = "Lo que dice el autor del tweet es FALSO.";	
+            	$(".e3").innerHTML = "Dicha noticia ha sido catalogada por expertos como FAKE NEW.";
+				fin = "falsa";
             }
+            
+            var veracidadNoticia = responseAsJson.veracidadNoticia;
+            
+            
             $(".e4").innerHTML = "Título de la noticia "+fin+" en cuestión: " + responseAsJson.tituloNoticia;
             $(".e5").setAttribute("href", responseAsJson.linkNoticia);
-            $(".e5").innerHTML = "Link: " + responseAsJson.linkNoticia;
+            $(".e5").setAttribute("target", "_blank");
+            $(".e5").innerHTML = "Link de la noticia: " + responseAsJson.linkNoticia;
             $(".e6").innerHTML = responseAsJson.cuerpoNoticia;
             var divTweets = $(".tweets-comunidad");
             for(var i = 0; i < responseAsJson.tweetsRelacionados.length; i++){ //Controlamos que no imprima el mismo tweet analizado

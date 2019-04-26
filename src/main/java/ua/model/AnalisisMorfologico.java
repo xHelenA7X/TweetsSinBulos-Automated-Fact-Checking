@@ -66,7 +66,23 @@ public class AnalisisMorfologico {
 	private String autorTweet;
 	private static final Logger log = Logger.getLogger(AnalisisMorfologico.class.getName());
 	
-	AnalisisMorfologico(String rutaArchivoXML,String autorTweet){
+	public AnalisisMorfologico(){
+		frase = "";
+		conclusion = "";
+		firmeza = "afirma";
+		posAdverbios = new ArrayList<Integer>();
+		posVerbos = new ArrayList<Integer>();
+		posAdjetivos = new ArrayList<Integer>();
+		adverbiosAquitar = new ArrayList<String>();
+		verbosConjugados = new ArrayList<String>();
+		verbosInfinitivo = new ArrayList<String>();
+		nombresComunes = new ArrayList<String>();
+		nombresPropios = new ArrayList<String>();
+		adjetivos = new ArrayList<String>();
+		fd = new FirmezaDao();
+	}
+	
+	public AnalisisMorfologico(String rutaArchivoXML,String autorTweet){
 		frase = "";
 		conclusion = "";
 		firmeza = "";
@@ -86,6 +102,33 @@ public class AnalisisMorfologico {
 		this.esFraseSubordinada();
 		tipoFrase=-1;
 		fd = new FirmezaDao();
+	}
+	
+	public String analisisFrase(String frase) {
+		List<Verbo> verbos = fd.getAllVerbos();
+		List<Adverbio> adverbios = fd.getAllAdverbios();
+		String firmezaAdverbios = "afirma";
+		String firmezaVerbos = "afirma";
+		
+		for(int i = 0; i < adverbios.size(); i++) {
+			if(frase.contains(adverbios.get(i).getAdverbio())) {
+				firmezaAdverbios = "niega";
+			}
+		}
+		
+		for(int i = 0; i < verbos.size(); i++) {
+			if(frase.contains(verbos.get(i).getVerbo())) {
+				firmezaVerbos = "niega";
+			}
+		}
+		
+		if(firmezaAdverbios.equals("niega") && firmezaVerbos.equals("afirma")) {
+    		firmeza = "niega";
+    	}
+    	if(firmezaAdverbios.equals("afirma") && firmezaVerbos.equals("niega")) {
+    		firmeza = "niega";
+    	}
+    	return firmeza;
 	}
 	
 	//Entiendase firmeza como la posicion que tiene el sujeto ante una afirmacion
@@ -133,7 +176,7 @@ public class AnalisisMorfologico {
     			}
    			}
     	}
-    	
+    	/**
     	if(posAdjetivos.size() > 0) {
     		Element adjetivo = null;
     		for(int j = 0; j < posAdjetivos.size(); j++) {	
@@ -157,6 +200,7 @@ public class AnalisisMorfologico {
 				}
     		}
     	}
+    	**/
     	
     	if(posicionAfirmacionAdverbio.equals("niega") && posicionAfirmacionVerbo.equals("afirma")) {
     		firmeza = "niega";
@@ -258,18 +302,18 @@ public class AnalisisMorfologico {
 			}
 			switch(tipoFrase) {
 			case 1: //Niega
-				conclusion = autorTweet + " niega que " + frase + ".";
+				conclusion = autorTweet + " niega que \"" + frase + ".\"";
 				break;
 			case 2: //Niega
 				this.construirFraseSinAdverbiosNegativos();
-				conclusion = autorTweet + " niega que " + frase;
+				conclusion = autorTweet + " niega que \"" + frase + ".\"";
 				break;
 			case 3: //Afirma
-				conclusion = autorTweet + " afirma que " + frase + ".";
+				conclusion = autorTweet + " afirma que \"" + frase + ".\"";
 				break;
 			case 4: //Afirma
 				this.construirFraseSinAdverbiosNegativos();
-				conclusion = autorTweet + " afirma que " + frase;
+				conclusion = autorTweet + " afirma que \"" + frase + ".\"";
 				break;
 			}
 		}
@@ -283,11 +327,11 @@ public class AnalisisMorfologico {
 			
 			switch(tipoFrase) {
 			case 1: //afirma	
-				conclusion = autorTweet + " afirma que " + frase + ".";
+				conclusion = autorTweet + " afirma que \"" + frase + ".\"";
 				break;
 			case 2: //niega
 				this.construirFraseSinAdverbiosNegativos();
-				conclusion = autorTweet + " niega que " + frase;
+				conclusion = autorTweet + " niega que \"" + frase + ".\"";
 				break;
 			}
 		}

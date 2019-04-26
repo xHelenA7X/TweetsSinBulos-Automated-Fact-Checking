@@ -342,25 +342,49 @@ public class Tweet {
 			if(coincidencia > 70.0) {
 				int fila_noticia = listKeywords.get(index_of_maximo).getFila();
 				tituloNoticia=corpus.getTituloByFila(fila_noticia);
+				//Analizar la posicion que da el titulo de la noticia
+				AnalisisMorfologico analisis = new AnalisisMorfologico();
+				String posicion_titulo = analisis.analisisFrase(tituloNoticia);	
 				cuerpoNoticia=corpus.getTextoNoticiaByFila(fila_noticia);
 				linkNoticia=corpus.getLinkByFila(fila_noticia);
 				veracidadNoticia = corpus.getVeracidadByFila(fila_noticia);
 				fuenteNoticia = corpus.getFuenteByFila(fila_noticia);
 				salidaCorpus="Noticia con procedencia " + fuenteNoticia + " encontrada.";
+				
 				if(conclusion.contains("afirma")) {
-					if(veracidadNoticia.equals("True")) {
-						veracidad = "1.0";
+					if(posicion_titulo.equals("afirma")) {
+						if(veracidadNoticia.equals("True")) {
+							veracidad = "1.0";
+						}
+						else {
+							veracidad = "0.0";
+						}
 					}
-					else if(veracidadNoticia.equals("Fake")) {
-						veracidad = "0.0";
+					else {
+						if(veracidadNoticia.equals("True")) {
+							veracidad = "0.0";
+						}
+						else {
+							veracidad = "1.0";
+						}
 					}
 				}
 				else if(conclusion.contains("niega")) {
-					if(veracidadNoticia.equals("Fake")) {
-						veracidad = "1.0";
+					if(posicion_titulo.equals("niega")) {
+						if(veracidadNoticia.equals("True")) {
+							veracidad = "1.0";
+						}
+						else {
+							veracidad = "0.0";
+						}
 					}
-					else if(veracidadNoticia.equals("True")) {
-						veracidad = "0.0";
+					else {
+						if(veracidadNoticia.equals("True")) {
+							veracidad = "0.0";
+						}
+						else {
+							veracidad = "1.0";
+						}
 					}
 				}
 			}
