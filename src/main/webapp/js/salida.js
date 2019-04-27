@@ -68,23 +68,22 @@ function JSON(){
             $(".e1").innerHTML = responseAsJson.salidaCorpus;
             var veracidad = responseAsJson.veracidad;
             var fin = "";
-            var strConclusionExpertos = conclusionExpertos(responseAsJson.conclusion);
             
             if(veracidad == "1.0"){
             	$(".e2").innerHTML = "Lo que dice el autor del tweet es CIERTO.";	
-            	$(".e3").innerHTML = "Dicha noticia ha sido catalogada por expertos como NOTICIA FALSA";
+            	$(".e3").innerHTML = "Dicha afirmación analizada ha sido catalogada por expertos como NOTICIA VERDADERA";
             	fin = "verdadera";
             }
             else if(veracidad == "0.0"){
             	$(".e2").innerHTML = "Lo que dice el autor del tweet es FALSO.";	
-            	$(".e3").innerHTML = "Dicha noticia ha sido catalogada por expertos como FAKE NEW.";
+            	$(".e3").innerHTML = "Dicha afirmación analizada ha sido catalogada por expertos como FAKE NEW.";
 				fin = "falsa";
             }
             
             var veracidadNoticia = responseAsJson.veracidadNoticia;
             
             
-            $(".e4").innerHTML = "Título de la noticia "+fin+" en cuestión: " + responseAsJson.tituloNoticia;
+            $(".e4").innerHTML = "Se ha utilizado como referencia la siguiente noticia: " + responseAsJson.tituloNoticia + " La cual ha sido catalogada como " + veracidadNoticia + ".";
             $(".e5").setAttribute("href", responseAsJson.linkNoticia);
             $(".e5").setAttribute("target", "_blank");
             $(".e5").innerHTML = "Link de la noticia: " + responseAsJson.linkNoticia;

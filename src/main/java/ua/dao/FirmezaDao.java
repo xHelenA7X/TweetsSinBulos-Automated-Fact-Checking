@@ -8,9 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.model.Adverbio;
+import ua.model.Palabra;
 import ua.model.Tweet;
-import ua.model.Verbo;
 import ua.util.DbUtil;
 
 public class FirmezaDao {
@@ -19,8 +18,8 @@ public class FirmezaDao {
     public FirmezaDao() {
         connection = DbUtil.getConnection();
     }
-    public Adverbio getAdverbioByNombre(String adverbio) {
-    	Adverbio adv = new Adverbio();
+    public Palabra getAdverbioByNombre(String adverbio) {
+    	Palabra adv = new Palabra();
         try {
             PreparedStatement preparedStatement = connection.
                     prepareStatement("select * from AdverbiosDeclarativos where adverbio=?");
@@ -28,7 +27,7 @@ public class FirmezaDao {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-            	adv.setAdverbio(rs.getString("adverbio"));
+            	adv.setPalabra(rs.getString("adverbio"));
             	adv.setFirmeza(rs.getString("firmeza"));
             }
         } catch (SQLException e) {
@@ -36,8 +35,8 @@ public class FirmezaDao {
         }
         return adv;
     }
-    public Verbo getVerboByNombre(String verbo) {
-    	Verbo vb = new Verbo();
+    public Palabra getVerboByNombre(String verbo) {
+    	Palabra vb = new Palabra();
         try {
             PreparedStatement preparedStatement = connection.
                     prepareStatement("select * from VerbosDeclarativos where verbo=?");
@@ -45,7 +44,7 @@ public class FirmezaDao {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-            	vb.setVerbo(rs.getString("verbo"));
+            	vb.setPalabra(rs.getString("verbo"));
             	vb.setFirmeza(rs.getString("firmeza"));
             }
         } catch (SQLException e) {
@@ -54,14 +53,32 @@ public class FirmezaDao {
         return vb;
     }
     
-    public List<Verbo> getAllVerbos() {
-        List<Verbo> verbos = new ArrayList<Verbo>();
+    public Palabra getAdjetivoByNombre(String adjetivo) {
+    	Palabra adj = new Palabra();
+        try {
+            PreparedStatement preparedStatement = connection.
+                    prepareStatement("select * from AdjetivosDeclarativos where adjetivo=?");
+            preparedStatement.setString(1, adjetivo);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+            	adj.setPalabra(rs.getString("adjetivo"));
+            	adj.setFirmeza(rs.getString("firmeza"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return adj;
+    }
+    
+    public List<Palabra> getAllVerbos() {
+        List<Palabra> verbos = new ArrayList<Palabra>();
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("select * from VerbosDeclarativos");
             while (rs.next()) {
-                Verbo vb = new Verbo();
-                vb.setVerbo(rs.getString("verbo"));
+            	Palabra vb = new Palabra();
+                vb.setPalabra(rs.getString("verbo"));
                 vb.setFirmeza(rs.getString("firmeza"));
                 verbos.add(vb);
             }
@@ -71,14 +88,14 @@ public class FirmezaDao {
 
         return verbos;
     }
-    public List<Adverbio> getAllAdverbios() {
-        List<Adverbio> adverbios = new ArrayList<Adverbio>();
+    public List<Palabra> getAllAdverbios() {
+        List<Palabra> adverbios = new ArrayList<Palabra>();
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("select * from AdverbiosDeclarativos");
             while (rs.next()) {
-            	Adverbio vb = new Adverbio();
-                vb.setAdverbio(rs.getString("adverbio"));
+            	Palabra vb = new Palabra();
+                vb.setPalabra(rs.getString("adverbio"));
                 vb.setFirmeza(rs.getString("firmeza"));
                 adverbios.add(vb);
             }
@@ -87,5 +104,23 @@ public class FirmezaDao {
         }
 
         return adverbios;
+    }
+    
+    public List<Palabra> getAllAdjetivos() {
+        List<Palabra> adjetivos = new ArrayList<Palabra>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select * from AdjetivosDeclarativos");
+            while (rs.next()) {
+            	Palabra adj = new Palabra();
+            	adj.setPalabra(rs.getString("adjetivo"));
+            	adj.setFirmeza(rs.getString("firmeza"));
+                adjetivos.add(adj);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return adjetivos;
     }
 }

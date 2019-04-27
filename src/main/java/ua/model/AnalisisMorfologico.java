@@ -105,29 +105,50 @@ public class AnalisisMorfologico {
 	}
 	
 	public String analisisFrase(String frase) {
-		List<Verbo> verbos = fd.getAllVerbos();
-		List<Adverbio> adverbios = fd.getAllAdverbios();
+		List<Palabra> verbos = fd.getAllVerbos();
+		List<Palabra> adverbios = fd.getAllAdverbios();
+		List<Palabra> adjetivos = fd.getAllAdjetivos();
 		String firmezaAdverbios = "afirma";
 		String firmezaVerbos = "afirma";
+		String firmezaAdjetivos = "afirma";
 		
 		for(int i = 0; i < adverbios.size(); i++) {
-			if(frase.contains(adverbios.get(i).getAdverbio())) {
+			if(frase.contains(adverbios.get(i).getPalabra())) {
 				firmezaAdverbios = "niega";
 			}
 		}
 		
 		for(int i = 0; i < verbos.size(); i++) {
-			if(frase.contains(verbos.get(i).getVerbo())) {
+			if(frase.contains(verbos.get(i).getPalabra())) {
 				firmezaVerbos = "niega";
 			}
 		}
 		
-		if(firmezaAdverbios.equals("niega") && firmezaVerbos.equals("afirma")) {
+		for(int i = 0; i < adjetivos.size(); i++) {
+			if(frase.contains(adjetivos.get(i).getPalabra())) {
+				firmezaAdjetivos = "niega";
+			}
+		}
+		
+		if(firmezaAdverbios.equals("niega") && firmezaVerbos.equals("afirma") ) {
     		firmeza = "niega";
     	}
     	if(firmezaAdverbios.equals("afirma") && firmezaVerbos.equals("niega")) {
     		firmeza = "niega";
     	}
+    	if(firmezaAdjetivos.equals("niega") && firmezaVerbos.equals("afirma") ) {
+    		firmeza = "niega";
+    	}
+    	if(firmezaAdjetivos.equals("afirma") && firmezaVerbos.equals("niega")) {
+    		firmeza = "niega";
+    	}
+    	if(firmezaAdverbios.equals("niega") && firmezaAdjetivos.equals("afirma") ) {
+    		firmeza = "niega";
+    	}
+    	if(firmezaAdverbios.equals("afirma") && firmezaAdjetivos.equals("niega")) {
+    		firmeza = "niega";
+    	}
+    	
     	return firmeza;
 	}
 	
@@ -135,6 +156,7 @@ public class AnalisisMorfologico {
 	private String analisis(List<Element> tokens, boolean esSegundaParte) {
 		String posicionAfirmacionAdverbio = "afirma";
 		String posicionAfirmacionVerbo = "afirma";
+		String posicionAfirmacionAdjetivo = "afirma";
 		String firmeza = "afirma";
 		
 		if(posVerbos.size() > 0) {
@@ -142,7 +164,7 @@ public class AnalisisMorfologico {
     		Element verbo = (Element) tokens.get(posVerbos.get(0));
     		String vString = verbo.getAttributeValue("lemma"); //Verbo en infinitivo
     		//Busqueda en la bd, si esta, lo que saque, si no, por defecto decimos que afirma
-    		Verbo vb = fd.getVerboByNombre(vString);
+    		Palabra vb = fd.getVerboByNombre(vString);
     		if(vb.getFirmeza() != "") {
     			posicionAfirmacionVerbo=vb.getFirmeza();
     		}
@@ -159,7 +181,7 @@ public class AnalisisMorfologico {
     				//Es un adverbio general, necesitamos respaldo de la bd
 					String adv_str = adverbio.getAttributeValue("lemma").toLowerCase();
 					//Consulta a la bd
-					Adverbio adv = fd.getAdverbioByNombre(adv_str);
+					Palabra adv = fd.getAdverbioByNombre(adv_str);
 					if(adv.getFirmeza()!=null) {
 						posicionAfirmacionAdverbio = adv.getFirmeza();
 						if(posicionAfirmacionAdverbio.equals("niega")) {
@@ -176,18 +198,18 @@ public class AnalisisMorfologico {
     			}
    			}
     	}
-    	/**
+    	
     	if(posAdjetivos.size() > 0) {
     		Element adjetivo = null;
     		for(int j = 0; j < posAdjetivos.size(); j++) {	
     			adjetivo = (Element) tokens.get(posAdjetivos.get(j));
-	    		//Es un adverbio general, necesitamos respaldo de la bd
+	    		//Buscamos el adjetivo en la bd
 				String adj_str = adjetivo.getAttributeValue("lemma").toLowerCase();
 				//Consulta a la bd
-				Adverbio adv = fd.getAdverbioByNombre(adj_str); //Va a realizar la busqueda en la tabla adverbios
-				if(adv.getFirmeza()!=null) {
-					posicionAfirmacionAdverbio = adv.getFirmeza();
-					if(posicionAfirmacionAdverbio.equals("niega")) {
+				Palabra adv = fd.getAdjetivoByNombre(adj_str); //Va a realizar la busqueda en la tabla adverbios
+				if(adv.getFirmeza()!="") {
+					posicionAfirmacionAdjetivo = adv.getFirmeza();
+					if(posicionAfirmacionAdjetivo.equals("niega")) {
 						if(esSubordinada == -1) {
 							adverbiosAquitar.add(adj_str);
 						}
@@ -200,13 +222,30 @@ public class AnalisisMorfologico {
 				}
     		}
     	}
-    	**/
     	
-    	if(posicionAfirmacionAdverbio.equals("niega") && posicionAfirmacionVerbo.equals("afirma")) {
-    		firmeza = "niega";
+    	if(posAdjetivos.size() > 0 && posAdverbios.size() > 0) {
+    		if(posicionAfirmacionAdjetivo.equals("niega") && posicionAfirmacionAdverbio.equals("afirma")) {
+        		firmeza = "niega";
+        	}
+    		if(posicionAfirmacionAdjetivo.equals("afirma") && posicionAfirmacionAdverbio.equals("niega")) {
+        		firmeza = "niega";
+        	}
     	}
-    	if(posicionAfirmacionAdverbio.equals("afirma") && posicionAfirmacionVerbo.equals("niega")) {
-    		firmeza = "niega";
+    	else if(posAdjetivos.size() > 0 && posVerbos.size() > 0) {
+    		if(posicionAfirmacionAdjetivo.equals("niega") && posicionAfirmacionVerbo.equals("afirma")) {
+        		firmeza = "niega";
+        	}
+    		if(posicionAfirmacionAdjetivo.equals("afirma") && posicionAfirmacionVerbo.equals("niega")) {
+        		firmeza = "niega";
+        	}
+    	}
+    	else {
+	    	if(posicionAfirmacionAdverbio.equals("niega") && posicionAfirmacionVerbo.equals("afirma")) {
+	    		firmeza = "niega";
+	    	}
+	    	if(posicionAfirmacionAdverbio.equals("afirma") && posicionAfirmacionVerbo.equals("niega")) {
+	    		firmeza = "niega";
+	    	}
     	}
     	return firmeza;
 	}
