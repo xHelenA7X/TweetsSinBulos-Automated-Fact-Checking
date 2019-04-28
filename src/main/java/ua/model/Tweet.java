@@ -1,6 +1,8 @@
 package ua.model;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +32,7 @@ import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
 import ua.controller.TweetController;
 import ua.dao.AutorDao;
+import ua.dao.FuentesFiablesDao;
 import ua.dao.TweetDao;
 import ua.util.FreelingXML;
 import ua.util.TweetConfiguration;
@@ -55,6 +58,7 @@ public class Tweet {
 	private String linkNoticia;
 	private String veracidadNoticia;
 	private String fuenteNoticia;
+	private String keywords_str;
 
 
 	public Tweet() {
@@ -72,6 +76,7 @@ public class Tweet {
 		linkNoticia="";
 		veracidadNoticia="";
 		fuenteNoticia="";
+		keywords_str = "";
 		this.convierteTextoPlano();
 		this.fecha_publicacion = fecha_publicacion;
 		//Date myDate = new Date();
@@ -82,6 +87,7 @@ public class Tweet {
 		generaFicheros();
 		generaSalida(); //Analisis morfologico de la oracion, extraer nombres comunes, propios, verbos...
 		busquedaCorpusFakeNews();
+		BusquedaFuentesFiablesExternas();
 	}
     
 	public String getIdTweet() {
@@ -297,10 +303,20 @@ public class Tweet {
 		analisis.analisisMorfologicoTweet();
 		this.setConclusion(analisis.getConclusion());
 		
-		buscaTweetsRelacionados(analisis.getNombresComunes()); //Primero buscamos solo con nombres comunes
 		buscaTweetsRelacionados(unirListas(analisis.getNombresComunes(), analisis.getVerbosConjugados())); //Ahora nombres comunes y verbo
 		buscaTweetsRelacionados(unirListas(analisis.getNombresPropios(), analisis.getNombresComunes()));
 		buscaTweetsRelacionados(unirListas(analisis.getNombresComunes(), analisis.getAdjetivos()));
+	}
+	
+	private void extraeKeywordsString(List<String> keywords) {
+		for(int i = 0; i < keywords.size(); i++) {
+			if(i != keywords.size()-1) {
+				keywords_str+=keywords.get(i) + " ";
+			}
+			else {
+				keywords_str+=keywords.get(i);
+			}
+		}
 	}
 	
 	private void busquedaCorpusFakeNews() {
@@ -310,6 +326,8 @@ public class Tweet {
 		if(analisis.getAdjetivos().size()>0) {
 			keywords = unirListas(keywords,analisis.getAdjetivos());
 		}
+		
+		extraeKeywordsString(keywords);
 		
 		for(int i = 0; i < keywords.size(); i++) { //Busqueda de las keywords en el corpus
 			corpus.busquedaCorpusFakeNews(keywords.get(i));
@@ -339,7 +357,19 @@ public class Tweet {
 			
 			salidaCorpus = "No se ha encontrado coincidencia en el corpus.";
 			
-			if(coincidencia > 70.0) {
+			boolean entra = false;
+			if (analisis.esSubordinada()){
+				if(coincidencia > 60.0) { //Si es subordinada relajamos la restriccion
+					entra = true;
+				}
+			}
+			else {
+				if(coincidencia > 70.0) {
+					entra = true;
+				}
+			}
+			
+			if(entra) { //Coincidencia encontrada
 				int fila_noticia = listKeywords.get(index_of_maximo).getFila();
 				tituloNoticia=corpus.getTituloByFila(fila_noticia);
 				//Analizar la posicion que da el titulo de la noticia
@@ -389,6 +419,22 @@ public class Tweet {
 				}
 			}
 		}
+	}
+	
+	public String BusquedaFuentesFiablesExternas() {
+        // Contiene la instruccion a ejecutar...
+        // Esta instruccion podria ser cambiada por cualquier otra
+        FuentesFiablesDao dao = new FuentesFiablesDao();
+        List<String> fuentes = dao.getAllFuentesFiables();
+        String comando = "";
+        String salida = "";
+        
+        for(int i = 0; i < fuentes.size(); i++) {
+	        salida = FuentesFiables.Busqueda(fuentes.get(i), keywords_str);
+	        log.warning(salida);
+        }
+        log.warning(salida);
+        return salida;
 	}
 	
 	private void extraeIdTweetsRelacionados(String queryString) {

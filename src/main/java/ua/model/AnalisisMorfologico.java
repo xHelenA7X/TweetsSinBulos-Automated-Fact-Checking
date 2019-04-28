@@ -114,19 +114,42 @@ public class AnalisisMorfologico {
 		
 		for(int i = 0; i < adverbios.size(); i++) {
 			if(frase.contains(adverbios.get(i).getPalabra())) {
-				firmezaAdverbios = "niega";
+				String adverbio = adverbios.get(i).getPalabra();
+				String[] palabras = frase.split(" ");
+				for(int j = 0; j < palabras.length; j++) {
+					if(palabras[j].equals(adverbio)) {
+						firmezaAdverbios = "niega";
+					}
+				}
 			}
 		}
 		
 		for(int i = 0; i < verbos.size(); i++) {
 			if(frase.contains(verbos.get(i).getPalabra())) {
-				firmezaVerbos = "niega";
+				String verbo = verbos.get(i).getPalabra();
+				if(verbo.contains(" ")) { //realmente fuese, realmente fuera, fuese realmente... Dependen de otra palabra
+					firmezaVerbos = "niega";
+				}
+				else {
+					String[] palabras = frase.split(" ");
+					for(int j = 0; j < palabras.length; j++) {
+						if(palabras[j].equals(verbo)) {
+							firmezaVerbos = "niega";
+						}
+					}
+				}
 			}
 		}
 		
 		for(int i = 0; i < adjetivos.size(); i++) {
 			if(frase.contains(adjetivos.get(i).getPalabra())) {
-				firmezaAdjetivos = "niega";
+				String adjetivo = adjetivos.get(i).getPalabra();
+				String[] palabras = frase.split(" ");
+				for(int j = 0; j < palabras.length; j++) {
+					if(palabras[j].equals(adjetivo)) {
+						firmezaAdjetivos = "niega";
+					}
+				}
 			}
 		}
 		
@@ -151,6 +174,37 @@ public class AnalisisMorfologico {
     	
     	return firmeza;
 	}
+	/**
+	public String analizaAdverbio(int posicionAdverbio) {
+		String posicion="afirma";
+		Element verbo = null;
+		
+		if(posicionAdverbio > 0) {
+			verbo = (Element) tokens.get(posicionAdverbio-1);
+			String pos = verbo.getAttributeValue("pos");
+			String form = verbo.getAttributeValue("form");
+			if(!pos.equals("verb")) {
+				if(posicionAdverbio != tokens.size()-1) {
+					pos = verbo.getAttributeValue("pos");
+					form = verbo.getAttributeValue("form");
+					if(pos.equals("verb")) {
+						verbo = (Element) tokens.get(posicionAdverbio+1);
+					}
+				}
+			}
+		}
+		if(verbo != null) {
+			String pos = verbo.getAttributeValue("pos");
+			String form = verbo.getAttributeValue("form");
+			if(pos.equals("verb")) {
+				if(form.equals("fuera") || form.equals("fuese")) {
+					posicion="niega";
+				}
+			}
+		}
+		return posicion;
+	}
+	**/
 	
 	//Entiendase firmeza como la posicion que tiene el sujeto ante una afirmacion
 	private String analisis(List<Element> tokens, boolean esSegundaParte) {
@@ -194,6 +248,13 @@ public class AnalisisMorfologico {
 								}
 							}
 						}
+						/**
+						else {//La firmeza es general
+							//Tenemos la palabra 'realmente', tenemos que analizar esta situacion
+							posicionAfirmacionAdverbio = analizaAdverbio(posAdverbios.get(j));
+							adverbiosAquitar.add(adv_str);
+						}
+						**/
 					}
     			}
    			}
@@ -570,6 +631,14 @@ public class AnalisisMorfologico {
 
 	public void setNombresPropios(List<String> nombresPropios) {
 		this.nombresPropios = nombresPropios;
+	}
+	public boolean esSubordinada() {
+		if(this.esSubordinada == -1) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 }
 	
