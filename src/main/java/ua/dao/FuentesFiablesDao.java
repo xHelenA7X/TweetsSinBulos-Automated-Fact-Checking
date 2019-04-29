@@ -23,7 +23,7 @@ public class FuentesFiablesDao {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("select * from FuentesFiables order by idFuentesFiables");
             while (rs.next()) {
-            	String fuente = rs.getString("Dominio");
+            	String fuente = rs.getString("dominio");
                 fuentes.add(fuente);
             }
         } catch (SQLException e) {

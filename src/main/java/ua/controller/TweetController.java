@@ -32,8 +32,10 @@ import twitter4j.TwitterFactory;
 import twitter4j.URLEntity;
 import twitter4j.conf.ConfigurationBuilder;
 import ua.dao.AutorDao;
+import ua.dao.NoticiaFuentesExternasDao;
 import ua.dao.TweetDao;
 import ua.model.Autor;
+import ua.model.NoticiaFuenteExterna;
 import ua.model.Tweet;
 import ua.util.TweetConfiguration;
 
@@ -43,11 +45,13 @@ public class TweetController extends HttpServlet{
 	private Twitter tw;
 	private TweetDao dao;
 	private AutorDao daoAutor;
-
+	private NoticiaFuentesExternasDao noticiaDao;
+	
 	public TweetController() {
 		super();
 		 dao = new TweetDao();
 		 daoAutor = new AutorDao();
+		 noticiaDao = new NoticiaFuentesExternasDao();
 		 tw = TweetConfiguration.getInstance();
 	}
 	
@@ -73,7 +77,7 @@ public class TweetController extends HttpServlet{
 			out.println(output);
 	}
 	
-	public JSONObject formulaJSON(Tweet tweet){
+	public JSONObject formulaJSON(Tweet tweet,List<NoticiaFuenteExterna> noticiasExternas){
 		long id_long = Long.parseLong(tweet.getIdTweet());
 		String salida = "";
 		JSONObject json = new JSONObject();
@@ -197,7 +201,8 @@ public class TweetController extends HttpServlet{
 		
 		if(idTweet != null) {
 			Tweet tweet = dao.getTweetById(idTweet);
-			json = formulaJSON(tweet);
+			List<NoticiaFuenteExterna> noticiasExternas = noticiaDao.getNoticiasFuentesExternasByIdTweet(idTweet);
+			json = formulaJSON(tweet,noticiasExternas);
 		}
 		else {
 			json.put("error", "Id del tweet no registrado");
@@ -216,6 +221,10 @@ public class TweetController extends HttpServlet{
 			 //Ese tuit no ha sido registrado todavia
 			 tweet = extraeCamposTweet(id);
 			 dao.addTweet(tweet); //Añadimos el tweet a la bd
+			 //Ahora añadimos las fuentes externas
+			 for(int i = 0; i < tweet.getFuentesExternas().size(); i++) {
+				 noticiaDao.addNoticiaFuenteExterna(tweet.getFuentesExternas().get(i), tweet.getIdTweet());
+			 }
 		 }
 		 
 	     RequestDispatcher view = request.getRequestDispatcher("salida.jsp");

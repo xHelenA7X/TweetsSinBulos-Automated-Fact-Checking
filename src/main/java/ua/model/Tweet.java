@@ -33,6 +33,7 @@ import twitter4j.conf.ConfigurationBuilder;
 import ua.controller.TweetController;
 import ua.dao.AutorDao;
 import ua.dao.FuentesFiablesDao;
+import ua.dao.NoticiaFuentesExternasDao;
 import ua.dao.TweetDao;
 import ua.util.FreelingXML;
 import ua.util.Googler;
@@ -60,6 +61,7 @@ public class Tweet {
 	private String veracidadNoticia;
 	private String fuenteNoticia;
 	private String keywords_str;
+	private List<NoticiaFuenteExterna> fuentesExternas;
 
 
 	public Tweet() {
@@ -78,6 +80,7 @@ public class Tweet {
 		veracidadNoticia="";
 		fuenteNoticia="";
 		keywords_str = "";
+		setFuentesExternas(new ArrayList<NoticiaFuenteExterna>());
 		this.convierteTextoPlano();
 		this.fecha_publicacion = fecha_publicacion;
 		//Date myDate = new Date();
@@ -256,7 +259,7 @@ public class Tweet {
 					nuevoTexto+= arrayTexto[i];
 				}
 			}
-		}
+		}        
 		texto = nuevoTexto;
 	}
 	private void convierteTextoPlano() {
@@ -422,20 +425,17 @@ public class Tweet {
 		}
 	}
 	
-	public String BusquedaFuentesFiablesExternas() {
-        // Contiene la instruccion a ejecutar...
-        // Esta instruccion podria ser cambiada por cualquier otra
+	public void BusquedaFuentesFiablesExternas() {
         FuentesFiablesDao dao = new FuentesFiablesDao();
         List<String> fuentes = dao.getAllFuentesFiables();
-        String comando = "";
         String salida = "";
         
         for(int i = 0; i < fuentes.size(); i++) {
-	        salida += Googler.BusquedaFuentesExternas(fuentes.get(i), keywords_str);
-	        Googler.procesaNoticiaFuenteExterna(salida);
+	        salida = Googler.BusquedaFuentesExternas(fuentes.get(i), keywords_str);
+	        NoticiaFuenteExterna fuenteObject = Googler.procesaNoticiaFuenteExterna(salida, fuentes.get(i));
+	        fuentesExternas.add(fuenteObject);
         }
-        log.warning(salida);
-        return salida;
+        
 	}
 	
 	private void extraeIdTweetsRelacionados(String queryString) {
@@ -477,5 +477,13 @@ public class Tweet {
 		}
 		extraeIdTweetsRelacionados(cadenaCompleta);
 		}
+	}
+
+	public List<NoticiaFuenteExterna> getFuentesExternas() {
+		return fuentesExternas;
+	}
+
+	public void setFuentesExternas(List<NoticiaFuenteExterna> fuentesExternas) {
+		this.fuentesExternas = fuentesExternas;
 	}
 }

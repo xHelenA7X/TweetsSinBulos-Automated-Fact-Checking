@@ -1,16 +1,23 @@
 package ua.model;
 
-public class FuenteExterna {
+public class NoticiaFuenteExterna {
 	private String fuente;
 	private String[] titulo;
 	private String[] link;
 	private String[] cuerpo;
 	
-	public FuenteExterna() {
+	public NoticiaFuenteExterna() {
 		fuente = "";
 		setTitulo(new String[2]);
 		setLink(new String[2]);
 		setCuerpo(new String[2]);
+	}
+	
+	public NoticiaFuenteExterna(String fuente, String[] titulo, String[] link, String[] cuerpo) {
+		this.fuente = fuente;
+		this.titulo = titulo;
+		this.link = link;
+		this.cuerpo = cuerpo;
 	}
 	
 	
@@ -50,4 +57,8 @@ public class FuenteExterna {
 	public void setCuerpo(String[] cuerpo) {
 		this.cuerpo = cuerpo;
 	}	
+	
+	public String toString(String[] vector) {
+		return "[\""+vector[0]+"\",\""+vector[1]+"\"]";
+	}
 }
