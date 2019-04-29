@@ -35,6 +35,7 @@ import ua.dao.AutorDao;
 import ua.dao.FuentesFiablesDao;
 import ua.dao.TweetDao;
 import ua.util.FreelingXML;
+import ua.util.Googler;
 import ua.util.TweetConfiguration;
 
 public class Tweet {
@@ -430,8 +431,8 @@ public class Tweet {
         String salida = "";
         
         for(int i = 0; i < fuentes.size(); i++) {
-	        salida = FuentesFiables.Busqueda(fuentes.get(i), keywords_str);
-	        log.warning(salida);
+	        salida += Googler.BusquedaFuentesExternas(fuentes.get(i), keywords_str);
+	        Googler.procesaNoticiaFuenteExterna(salida);
         }
         log.warning(salida);
         return salida;
