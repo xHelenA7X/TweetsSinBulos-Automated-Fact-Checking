@@ -85,6 +85,8 @@ blockquote:before{
 	border:1px solid #EBEBEB;
 }
 .tweets-comunidad{
+	position: relative;
+    margin-top: 30px;
     border: solid 1px grey;
     padding : 10px;
     width : 500px;
@@ -830,3 +832,38 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 	from { -webkit-transform: rotate(0deg); transform: rotate(0deg);}
 	to { -webkit-transform: rotate(360deg); transform: rotate(360deg);}
 }
+
+.maldita, .saludsinbulos, .vost, .snopes, .eldiario, .verificado, .chequeado{
+	margin-top: 40px;
+	margin-bottom: 50px;
+}
+
+.maldita > h4, .saludsinbulos > h4, .vost > h4, .snopes > h4, .eldiario > h4, .verificado > h4, .chequeado > h4{
+	color: #2AA500;
+}
+ 
+.maldita a, .saludsinbulos a, .vost a, .snopes a, .eldiario a, .verificado a, .chequeado a{
+	color: #EA7106
+}
+
+.maldita img, .vost img, .snopes img, .eldiario img, .verificado img, .chequeado img{
+	margin-top: 20px;
+	margin-left: 30px;
+	width:70px;
+    height:70px;
+    float: right;
+}
+
+.saludsinbulos img{
+	marign-top: 20px;
+	margin-left: 40px;
+	width:100px;
+    height:100px;
+    float: right;
+}
+.nota-comunidad{
+	margin-top: 20px;
+}
+
+
+

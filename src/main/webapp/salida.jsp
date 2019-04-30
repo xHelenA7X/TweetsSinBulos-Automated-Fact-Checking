@@ -132,13 +132,44 @@
 								<i class="feature-icon fa fa-fire"></i>
 								<div class="feature-content">
 									<h4>¿Qué dicen fuentes externas?</h4>
-									<div class="maldita"></div>
-									<div class="saludsinbulos"></div>
-									<div class="vost"></div>
-									<div class="snopes"></div>
-									<div class="eldiario"></div>
-									<div class="verificado"></div>
-									<div class="chequeado"></div>
+									<i>Nota: Las siguientes fuentes están supervisadas por expertos encargados
+									en desmontar y verificar noticias falsas, por lo que han sido categorizadas
+									como fuentes fiables.</i>
+									<div class="maldita">
+										<a href="https://maldita.es/" target="_blank">
+											<img src="img/maldita-logo.webp">
+										</a>
+									</div>
+									<div class="saludsinbulos">
+										<a href="https://saludsinbulos.com/" target="_blank">
+											<img src="img/saludsinbulos-logo.png">
+										</a>
+									</div>
+									<div class="vost">
+										<a href="https://www.vost.es/stopbulos" target="_blank">
+											<img src="img/vost-logo.png">
+										</a>
+									</div>
+									<div class="snopes">
+										<a href="https://www.snopes.com/" target="_blank">
+											<img src="img/snopes-logo.png">
+										</a>
+									</div>
+									<div class="eldiario">
+										<a href="https://www.eldiario.es/" target="_blank">
+											<img src="img/eldiario-logo.png">
+										</a>
+									</div>
+									<div class="verificado">
+										<a href="https://verificado.mx/categoria/verificaciones/" target="_blank">
+											<img src="img/verificado-logo.png">
+										</a>
+									</div>
+									<div class="chequeado">
+										<a href="https://chequeado.com/" target="_blank">
+											<img src="img/chequeado-logo.webp">
+										</a>
+									</div>
 								</div>
 							</div>
 							
@@ -150,6 +181,7 @@
 								<i class="feature-icon fa fa-comments"></i>
 								<div class="feature-content">
 									<h4>¿Qué dice la comunidad al respecto?</h4>
+									<i class="nota-comunidad">Aportes de la comunidad... ¡Pero que no te la cuelen!</i>
                                     <div class="tweets-comunidad">
                                     </div>
 							</div>

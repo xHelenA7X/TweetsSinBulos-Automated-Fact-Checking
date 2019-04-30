@@ -90,9 +90,9 @@ function JSON(){
             $(".e6").innerHTML = responseAsJson.cuerpoNoticia;
             
             var divFuentesExternas = $(".maldita");
-            for(var i = 0; i < responseAsJson.noticiaFuentesExternas.length; i++){
+            for(var i = 0; i < responseAsJson.noticiaFuentesExternas.length && divFuentesExternas != null; i++){
             	var noticiaJson = responseAsJson.noticiaFuentesExternas[i];
-            	var newHeader = document.createElement("h5");
+            	var newHeader = document.createElement("h4");
             	newHeader.innerHTML = noticiaJson.fuenteNoticia;
             	insertAsLastChild(divFuentesExternas, newHeader);
             	
@@ -103,34 +103,46 @@ function JSON(){
         		insertAsLastChild(divFuentesExternas,pNoticia);
             	
             	var cuerpos = noticiaJson.cuerpoNoticias;
-            	pNoticia = document.createElement("p");
-        		pNoticia.innerHTML = cuerpos[0].cuerpoNoticia;
-        		insertAsLastChild(divFuentesExternas,pNoticia);
+            	if(cuerpos[0].cuerpoNoticia != "null"){
+	            	pNoticia = document.createElement("p");
+	        		pNoticia.innerHTML = cuerpos[0].cuerpoNoticia;
+	        		insertAsLastChild(divFuentesExternas,pNoticia);
+            	}
             	
             	var links = noticiaJson.linksNoticias;
-            	var aNoticia = document.createElement("p");
-            	pNoticia = document.createElement("a");
-            	pNoticia.setAttribute("href",links[0].linkNoticia);
-            	pNoticia.setAttribute("target","_blank");
-        		pNoticia.innerHTML = links[0].linkNoticia;
-        		insertAsLastChild(aNoticia,pNoticia);
-        		insertAsLastChild(divFuentesExternas,aNoticia);
+            	if(links[0].linkNoticia != "null"){
+	            	var aNoticia = document.createElement("p");
+	            	pNoticia = document.createElement("a");
+	            	pNoticia.setAttribute("href",links[0].linkNoticia);
+	            	pNoticia.setAttribute("target","_blank");
+	        		pNoticia.innerHTML = links[0].linkNoticia;
+	        		insertAsLastChild(aNoticia,pNoticia);
+	        		insertAsLastChild(divFuentesExternas,aNoticia);
+        		}
             	
-            	pNoticia = document.createElement("b");
-            	pNoticia.innerHTML = titulos[1].tituloNoticia;
-        		insertAsLastChild(divFuentesExternas,pNoticia);
+            	if(titulos[1].tituloNoticia != "null"){
+	            	pNoticia = document.createElement("b");
+	            	pNoticia.innerHTML = titulos[1].tituloNoticia;
+	        		insertAsLastChild(divFuentesExternas,pNoticia);
+        		}
         		
-        		pNoticia = document.createElement("p");
-        		pNoticia.innerHTML = cuerpos[1].cuerpoNoticia;
-        		insertAsLastChild(divFuentesExternas,pNoticia);
+        		if(cuerpos[1].cuerpoNoticia != "null"){
+	        		pNoticia = document.createElement("p");
+	        		pNoticia.innerHTML = cuerpos[1].cuerpoNoticia;
+	        		insertAsLastChild(divFuentesExternas,pNoticia);
+        		}
         		
-        		aNoticia = document.createElement("p");
-        		pNoticia = document.createElement("a");
-        		pNoticia.setAttribute("href",links[1].linkNoticia);
-            	pNoticia.setAttribute("target","_blank");
-        		pNoticia.innerHTML = links[1].linkNoticia;
-        		insertAsLastChild(aNoticia,pNoticia);
-        		insertAsLastChild(divFuentesExternas,aNoticia);         	
+        		if(links[1].linkNoticia != "null"){
+	        		aNoticia = document.createElement("p");
+	        		pNoticia = document.createElement("a");
+	        		pNoticia.setAttribute("href",links[1].linkNoticia);
+	            	pNoticia.setAttribute("target","_blank");
+	        		pNoticia.innerHTML = links[1].linkNoticia;
+	        		insertAsLastChild(aNoticia,pNoticia);
+	        		insertAsLastChild(divFuentesExternas,aNoticia);     
+        		}
+        		
+        		divFuentesExternas = divFuentesExternas.nextElementSibling;
             }
             
             
