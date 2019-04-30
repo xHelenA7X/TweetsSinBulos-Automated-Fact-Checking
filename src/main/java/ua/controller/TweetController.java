@@ -77,7 +77,7 @@ public class TweetController extends HttpServlet{
 			out.println(output);
 	}
 	
-	public JSONObject formulaJSON(Tweet tweet,List<NoticiaFuenteExterna> noticiasExternas){
+	public JSONObject formulaJSON(Tweet tweet){
 		long id_long = Long.parseLong(tweet.getIdTweet());
 		String salida = "";
 		JSONObject json = new JSONObject();
@@ -137,6 +137,40 @@ public class TweetController extends HttpServlet{
 				arrayTweetsRelacionados.put(item);
 			}
 			json.put("tweetsRelacionados", arrayTweetsRelacionados);
+			
+			//Insertamos los resultados de la busqueda de noticias en fuentes fiables externas
+			JSONArray arrayFuentesExternas = new JSONArray();
+			for(int i = 0; i < tweet.getFuentesExternas().size(); i++){
+				JSONObject item = new JSONObject();
+				item.put("fuenteNoticia", tweet.getFuentesExternas().get(i).getFuente());
+				JSONArray arrayTitulo = new JSONArray();
+				for(int j = 0; j < 2; j++) {
+					JSONObject itemTitulo = new JSONObject();
+					itemTitulo.put("tituloNoticia", tweet.getFuentesExternas().get(i).getTitulo()[j]);
+					arrayTitulo.put(itemTitulo);
+					item.put("titulosNoticias",arrayTitulo);
+				}
+
+				JSONArray arrayLink = new JSONArray();
+				for(int j = 0; j < 2; j++) {
+					JSONObject itemLink = new JSONObject();
+					itemLink.put("linkNoticia", tweet.getFuentesExternas().get(i).getLink()[j]);
+					arrayLink.put(itemLink);
+					item.put("linksNoticias",arrayLink);
+				}
+
+				JSONArray arrayCuerpo = new JSONArray();
+				for(int j = 0; j < 2; j++) {
+					JSONObject itemCuerpo = new JSONObject();
+					itemCuerpo.put("cuerpoNoticia", tweet.getFuentesExternas().get(i).getCuerpo()[j]);
+					arrayCuerpo.put(itemCuerpo);
+					item.put("cuerpoNoticias",arrayCuerpo);
+				}
+				arrayFuentesExternas.put(item);
+			}
+			json.put("noticiaFuentesExternas", arrayFuentesExternas);
+			
+			
 			
 /**
 			JSONArray array = new JSONArray();
@@ -201,8 +235,7 @@ public class TweetController extends HttpServlet{
 		
 		if(idTweet != null) {
 			Tweet tweet = dao.getTweetById(idTweet);
-			List<NoticiaFuenteExterna> noticiasExternas = noticiaDao.getNoticiasFuentesExternasByIdTweet(idTweet);
-			json = formulaJSON(tweet,noticiasExternas);
+			json = formulaJSON(tweet);
 		}
 		else {
 			json.put("error", "Id del tweet no registrado");

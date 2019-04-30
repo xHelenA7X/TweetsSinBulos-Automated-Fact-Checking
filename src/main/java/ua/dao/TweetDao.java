@@ -103,6 +103,7 @@ public class TweetDao {
 
     public Tweet getTweetById(String TweetId) {
     	Tweet af = new Tweet();
+    	NoticiaFuentesExternasDao ndao = new NoticiaFuentesExternasDao();
         try {
             PreparedStatement preparedStatement = connection.
                     prepareStatement("select * from Tweet where idTweet=?");
@@ -126,6 +127,7 @@ public class TweetDao {
                 af.setVeracidadNoticia(rs.getString("veracidadNoticia"));
                 af.setSalidaCorpus(rs.getString("salidaCorpus"));
                 af.setFuenteNoticia(rs.getString("fuenteNoticia"));
+                af.setFuentesExternas(ndao.getNoticiasFuentesExternasByIdTweet(TweetId));
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -126,6 +126,23 @@
 									<p class="e6"></p>
 								</div>
 							</div>
+							
+														<!-- feature -->
+							<div class="feature">
+								<i class="feature-icon fa fa-fire"></i>
+								<div class="feature-content">
+									<h4>¿Qué dicen fuentes externas?</h4>
+									<div class="maldita"></div>
+									<div class="saludsinbulos"></div>
+									<div class="vost"></div>
+									<div class="snopes"></div>
+									<div class="eldiario"></div>
+									<div class="verificado"></div>
+									<div class="chequeado"></div>
+								</div>
+							</div>
+							
+							
 							<!-- /feature -->
 	
 							<!-- feature -->

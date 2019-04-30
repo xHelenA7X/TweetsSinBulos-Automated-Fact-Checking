@@ -88,6 +88,52 @@ function JSON(){
             $(".e5").setAttribute("target", "_blank");
             $(".e5").innerHTML = "Link de la noticia: " + responseAsJson.linkNoticia;
             $(".e6").innerHTML = responseAsJson.cuerpoNoticia;
+            
+            var divFuentesExternas = $(".maldita");
+            for(var i = 0; i < responseAsJson.noticiaFuentesExternas.length; i++){
+            	var noticiaJson = responseAsJson.noticiaFuentesExternas[i];
+            	var newHeader = document.createElement("h5");
+            	newHeader.innerHTML = noticiaJson.fuenteNoticia;
+            	insertAsLastChild(divFuentesExternas, newHeader);
+            	
+            	var titulos = noticiaJson.titulosNoticias;
+            	
+        		var pNoticia = document.createElement("b");
+        		pNoticia.innerHTML = titulos[0].tituloNoticia;
+        		insertAsLastChild(divFuentesExternas,pNoticia);
+            	
+            	var cuerpos = noticiaJson.cuerpoNoticias;
+            	pNoticia = document.createElement("p");
+        		pNoticia.innerHTML = cuerpos[0].cuerpoNoticia;
+        		insertAsLastChild(divFuentesExternas,pNoticia);
+            	
+            	var links = noticiaJson.linksNoticias;
+            	var aNoticia = document.createElement("p");
+            	pNoticia = document.createElement("a");
+            	pNoticia.setAttribute("href",links[0].linkNoticia);
+            	pNoticia.setAttribute("target","_blank");
+        		pNoticia.innerHTML = links[0].linkNoticia;
+        		insertAsLastChild(aNoticia,pNoticia);
+        		insertAsLastChild(divFuentesExternas,aNoticia);
+            	
+            	pNoticia = document.createElement("b");
+            	pNoticia.innerHTML = titulos[1].tituloNoticia;
+        		insertAsLastChild(divFuentesExternas,pNoticia);
+        		
+        		pNoticia = document.createElement("p");
+        		pNoticia.innerHTML = cuerpos[1].cuerpoNoticia;
+        		insertAsLastChild(divFuentesExternas,pNoticia);
+        		
+        		aNoticia = document.createElement("p");
+        		pNoticia = document.createElement("a");
+        		pNoticia.setAttribute("href",links[1].linkNoticia);
+            	pNoticia.setAttribute("target","_blank");
+        		pNoticia.innerHTML = links[1].linkNoticia;
+        		insertAsLastChild(aNoticia,pNoticia);
+        		insertAsLastChild(divFuentesExternas,aNoticia);         	
+            }
+            
+            
             var divTweets = $(".tweets-comunidad");
             for(var i = 0; i < responseAsJson.tweetsRelacionados.length; i++){ //Controlamos que no imprima el mismo tweet analizado
                 if(responseAsJson.idTweet == responseAsJson.tweetsRelacionados[i] && i == responseAsJson.tweetsRelacionados.length-1){
