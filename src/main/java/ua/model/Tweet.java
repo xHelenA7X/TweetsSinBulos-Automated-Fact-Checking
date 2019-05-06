@@ -1,40 +1,22 @@
 package ua.model;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.annolab.tt4j.TokenHandler;
-import org.annolab.tt4j.TreeTaggerWrapper;
-
-import twitter4j.HashtagEntity;
-import twitter4j.JSONArray;
-import twitter4j.JSONObject;
 import twitter4j.Query;
 import twitter4j.Query.ResultType;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.URLEntity;
-import twitter4j.conf.ConfigurationBuilder;
 import ua.controller.TweetController;
 import ua.dao.AutorDao;
-import ua.dao.FuentesFiablesDao;
-import ua.dao.NoticiaFuentesExternasDao;
-import ua.dao.TweetDao;
+import ua.dao.FuentesExternasDao;
 import ua.util.FreelingXML;
 import ua.util.Googler;
 import ua.util.TweetConfiguration;
@@ -91,7 +73,8 @@ public class Tweet {
 		generaFicheros();
 		generaSalida(); //Analisis morfologico de la oracion, extraer nombres comunes, propios, verbos...
 		busquedaCorpusFakeNews();
-		BusquedaFuentesFiablesExternas();
+		BusquedaFuentesExternas("fiable");
+		BusquedaFuentesExternas("no_fiable");
 	}
     
 	public String getIdTweet() {
@@ -425,9 +408,16 @@ public class Tweet {
 		}
 	}
 	
-	public void BusquedaFuentesFiablesExternas() {
-        FuentesFiablesDao dao = new FuentesFiablesDao();
-        List<String> fuentes = dao.getAllFuentesFiables();
+	public void BusquedaFuentesExternas(String tipo) { //Si la busqueda es en fuentes fiables o no fiables
+        FuentesExternasDao dao = new FuentesExternasDao();
+        List<String> fuentes = null;
+        
+        if(tipo.equals("fiable")) {
+        	 fuentes = dao.getAllFuentesFiables();
+        }
+        else if(tipo.equals("no_fiable")) {
+        	fuentes = dao.getAllFuentesNoFiables();
+        }
         String salida = "";
         
         for(int i = 0; i < fuentes.size(); i++) {

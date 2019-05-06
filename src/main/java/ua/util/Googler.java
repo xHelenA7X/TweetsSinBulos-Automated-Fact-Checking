@@ -3,40 +3,35 @@ package ua.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.logging.Logger;
 
-import ua.controller.TweetController;
-import ua.dao.FuentesFiablesDao;
 import ua.model.NoticiaFuenteExterna;
 
 public class Googler {
-	private static final Logger log = Logger.getLogger(Googler.class.getName());
 	
 	public static String BusquedaFuentesExternas(String fuente,String keywords_str) {
 		String salida = "";
 		try
         {
             Runtime r = Runtime.getRuntime();
-            String comando = "googler -C -w "+ fuente + " " + keywords_str;
+            String comando = "googler -C --np -n 2 -w "+ fuente + " " + keywords_str;
             Process p = r.exec(comando);
             // Inicializa el lector del buffer
             BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
- 
-            String inputLine;    
-            int primerCaracter = in.read();
+            String inputLine = "";
             
-            if(primerCaracter != 103) { //Si no encontramos nada el primer caracter que saca siempre es 'g'
-	            // Bucle mientas reciba parametros del buffer
-	            for(int i = 0; i < 8 && (inputLine=in.readLine()) != null; i++) {
-	            	if(in.ready()) {
-		                salida += inputLine + "\n";
-	            	}         
-	            }
+            
+            while((inputLine=in.readLine()) != null){
+                // Si deseamos capturar el resultado para posteriormente
+                // utilizarlo en nuestra aplicacion
+                salida += inputLine + "\n";
+               // System.out.println(in.read());
+                
             }
-            else {
+            if(salida.isEmpty()){
+            	System.out.println("Sin resultados");
             	salida = "Sin resultados para " + fuente + "\n";
             }
+            
             in.close();
 
         } catch (IOException e) {

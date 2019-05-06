@@ -833,20 +833,20 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 	to { -webkit-transform: rotate(360deg); transform: rotate(360deg);}
 }
 
-.maldita, .saludsinbulos, .vost, .snopes, .eldiario, .verificado, .chequeado{
+.maldita, .saludsinbulos, .vost, .snopes, .eldiario, .verificado, .chequeado, .aecc{
 	margin-top: 40px;
 	margin-bottom: 50px;
 }
 
-.maldita > h4, .saludsinbulos > h4, .vost > h4, .snopes > h4, .eldiario > h4, .verificado > h4, .chequeado > h4{
+.maldita > h4, .saludsinbulos > h4, .vost > h4, .snopes > h4, .eldiario > h4, .verificado > h4, .chequeado > h4, .aecc > h4{
 	color: #2AA500;
 }
  
-.maldita a, .saludsinbulos a, .vost a, .snopes a, .eldiario a, .verificado a, .chequeado a{
+.maldita a, .saludsinbulos a, .vost a, .snopes a, .eldiario a, .verificado a, .chequeado a, .aecc a{
 	color: #EA7106
 }
 
-.maldita img, .vost img, .snopes img, .eldiario img, .verificado img, .chequeado img{
+.maldita img, .vost img, .snopes img, .eldiario img, .verificado img, .chequeado img, .aecc img{
 	margin-top: 20px;
 	margin-left: 30px;
 	width:70px;

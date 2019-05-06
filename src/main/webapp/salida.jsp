@@ -170,6 +170,12 @@
 											<img src="img/chequeado-logo.webp">
 										</a>
 									</div>
+									
+									<div class="aecc">
+										<a href="https://www.aecc.es/es" target="_blank">
+											<img src="img/aecc-logo.jpg">
+										</a>
+									</div>
 								</div>
 							</div>
 							
