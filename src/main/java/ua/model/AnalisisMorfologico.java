@@ -350,12 +350,29 @@ public class AnalisisMorfologico {
 	    		firmeza = "niega";
 	    	}
     	}
+    	else if(posVerbos.size() > 0) {
+    		if(posicionAfirmacionVerbo.equals("niega")) {
+    			firmeza = "niega";
+    		}
+    	}
+    	else if(posAdjetivos.size() > 0) {
+    		if(posicionAfirmacionAdjetivo.equals("niega")) {
+    			firmeza = "niega";
+    		}
+    	}
+    	else if(posAdverbios.size() > 0) {
+    		if(posicionAfirmacionAdverbio.equals("niega")) {
+    			firmeza = "niega";
+    		}
+    	}
     	
     	if(posicionAfirmacionNombreComun.equals("niega")) {
     		if(posicionAfirmacionAdverbio.equals("afirma")) {
     			firmeza = "niega";
     		}
     	}
+    	
+    	
     	
     	return firmeza;
 	}
