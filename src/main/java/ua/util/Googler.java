@@ -28,7 +28,6 @@ public class Googler {
                 
             }
             if(salida.isEmpty()){
-            	System.out.println("Sin resultados");
             	salida = "Sin resultados para " + fuente + "\n";
             }
             
@@ -57,7 +56,7 @@ public class Googler {
 			cuerpo[1] = partes[6];
 		}
 		
-		if(partes.length == 4) {
+		if(partes.length == 3) {
 			link[0] = partes[1].replaceAll(" ", "");
 			titulo[0] = partes[0];
 			cuerpo[0] = partes[2];

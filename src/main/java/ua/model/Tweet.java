@@ -196,7 +196,7 @@ public class Tweet {
 		this.veracidadNoticia = veracidadNoticia;
 	}
 	public String getFuenteNoticia() {
-		return veracidadNoticia;
+		return fuenteNoticia;
 	}
 
 	public void setFuenteNoticia(String fuenteNoticia) {
@@ -366,7 +366,7 @@ public class Tweet {
 				linkNoticia=corpus.getLinkByFila(fila_noticia);
 				veracidadNoticia = corpus.getVeracidadByFila(fila_noticia);
 				fuenteNoticia = corpus.getFuenteByFila(fila_noticia);
-				salidaCorpus="Noticia con procedencia " + fuenteNoticia + " encontrada.";
+				salidaCorpus=fuenteNoticia;
 				
 				if(conclusion.contains("afirma")) {
 					if(posicion_titulo.equals("afirma")) {

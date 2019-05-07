@@ -64,33 +64,122 @@ function JSON(){
         else{
         	console.log(responseAsJson);
             $(".lead").innerHTML = responseAsJson.texto;
-            $(".conclusion").innerHTML = responseAsJson.conclusion;
-            $(".e1").innerHTML = responseAsJson.salidaCorpus;
-            var veracidad = responseAsJson.veracidad;
-            var fin = "";
             
-            if(veracidad == "1.0"){
-            	$(".e2").innerHTML = "Lo que dice el autor del tweet es CIERTO.";	
-            	$(".e3").innerHTML = "Dicha afirmación analizada ha sido catalogada por expertos como NOTICIA VERDADERA";
-            	fin = "verdadera";
+            var divconclusion = $(".conclusion");
+            if(responseAsJson.conclusion.includes("afirma que")){
+            	divconclusion.setAttribute("color","verde");
             }
-            else if(veracidad == "0.0"){
-            	$(".e2").innerHTML = "Lo que dice el autor del tweet es FALSO.";	
-            	$(".e3").innerHTML = "Dicha afirmación analizada ha sido catalogada por expertos como FAKE NEW.";
-				fin = "falsa";
+            else{
+            	divconclusion.setAttribute("color","rojo");
             }
             
-            var veracidadNoticia = responseAsJson.veracidadNoticia;
+            divconclusion.innerHTML = responseAsJson.conclusion.replace("\" ", "\"");
             
+            var seguir = true;
             
-            $(".e4").innerHTML = "Se ha utilizado como referencia la siguiente noticia: " + responseAsJson.tituloNoticia + " La cual ha sido catalogada como " + veracidadNoticia + ".";
-            $(".e5").setAttribute("href", responseAsJson.linkNoticia);
-            $(".e5").setAttribute("target", "_blank");
-            $(".e5").innerHTML = "Link de la noticia: " + responseAsJson.linkNoticia;
-            $(".e6").innerHTML = responseAsJson.cuerpoNoticia;
+            if(!responseAsJson.salidaCorpus.includes("No se ha encontrado")){
+				var fuenteExterna = responseAsJson.salidaCorpus;
+				$(".e1").innerHTML = "Noticia con procedencia <span class=\"fuenteExterna\">"+ fuenteExterna + "</span> encontrada.";           
+            }
+            else{
+            	$(".e1").innerHTML = responseAsJson.salidaCorpus;
+            	seguir = false;
+            }
+            
+            if(seguir){
+	            var veracidad = responseAsJson.veracidad;
+	            var fin = "";
+	            
+	            if(veracidad == "1.0"){
+	            	$(".e2").innerHTML = "Lo que dice el autor del tweet es <span class=\"conclusion\" color=\"verde\">CIERTO</span> .";
+	            	$(".e3").innerHTML = "Dicha afirmación analizada ha sido catalogada por expertos como <span class=\"conclusion\" color=\"verde\">NOTICIA VERDADERA</span>.";
+	            	fin = "verdadera";
+	            }
+	            else if(veracidad == "0.0"){
+	            	$(".e2").innerHTML = "Lo que dice el autor del tweet es <span class=\"conclusion\" color=\"rojo\">FALSO</span> .";	
+	            	$(".e3").innerHTML = "Dicha afirmación analizada ha sido catalogada por expertos como <span class=\"conclusion\" color=\"rojo\">FAKE NEW</span>.";
+					fin = "falsa";
+	            }
+	            
+	            var veracidadNoticia = responseAsJson.veracidadNoticia;
+	            var color = "rojo";
+	            
+	            if(veracidadNoticia == "True"){
+	            	veracidadNoticia = "verdadera";
+	            	color = "verde";
+	            }
+	            
+	            $(".e4").innerHTML = "Se ha utilizado como referencia la siguiente noticia: <a href=\""+responseAsJson.linkNoticia+"\" target=\"_blank\">" + responseAsJson.tituloNoticia + "<a/> la cual ha sido catalogada como <span class=\"conclusion\" color=\""+color+"\">" + veracidadNoticia + "</span>";
+	            $(".e5").setAttribute("href", responseAsJson.linkNoticia);
+	            $(".e5").setAttribute("target", "_blank");
+	            if(veracidadNoticia == "Fake"){
+	            	veracidadNoticia = "falsa";
+	            }
+	            $(".e5").innerHTML = "Link de la noticia <span class=\"conclusion\" color=\""+color+"\">" + veracidadNoticia + "</span>: " + responseAsJson.linkNoticia;
+	            $(".e6").innerHTML = responseAsJson.cuerpoNoticia;
+            }
+            
+            //Fuentes externas fiables
             
             var divFuentesExternas = $(".maldita");
-            for(var i = 0; i < responseAsJson.noticiaFuentesExternas.length && divFuentesExternas != null; i++){
+            for(var i = 0; i < 8 && divFuentesExternas != null; i++){
+            	var noticiaJson = responseAsJson.noticiaFuentesExternas[i];
+            	var newHeader = document.createElement("h4");
+            	newHeader.innerHTML = noticiaJson.fuenteNoticia;
+            	insertAsLastChild(divFuentesExternas, newHeader);
+            	
+            	var titulos = noticiaJson.titulosNoticias;
+            	
+        		var pNoticia = document.createElement("b");
+        		pNoticia.innerHTML = titulos[0].tituloNoticia;
+        		insertAsLastChild(divFuentesExternas,pNoticia);
+            	
+            	var cuerpos = noticiaJson.cuerpoNoticias;
+            	if(cuerpos[0].cuerpoNoticia != "null"){
+	            	pNoticia = document.createElement("p");
+	        		pNoticia.innerHTML = cuerpos[0].cuerpoNoticia;
+	        		insertAsLastChild(divFuentesExternas,pNoticia);
+            	}
+            	
+            	var links = noticiaJson.linksNoticias;
+            	if(links[0].linkNoticia != "null"){
+	            	var aNoticia = document.createElement("p");
+	            	pNoticia = document.createElement("a");
+	            	pNoticia.setAttribute("href",links[0].linkNoticia);
+	            	pNoticia.setAttribute("target","_blank");
+	        		pNoticia.innerHTML = links[0].linkNoticia;
+	        		insertAsLastChild(aNoticia,pNoticia);
+	        		insertAsLastChild(divFuentesExternas,aNoticia);
+        		}
+            	
+            	if(titulos[1].tituloNoticia != "null"){
+	            	pNoticia = document.createElement("b");
+	            	pNoticia.innerHTML = titulos[1].tituloNoticia;
+	        		insertAsLastChild(divFuentesExternas,pNoticia);
+        		}
+        		
+        		if(cuerpos[1].cuerpoNoticia != "null"){
+	        		pNoticia = document.createElement("p");
+	        		pNoticia.innerHTML = cuerpos[1].cuerpoNoticia;
+	        		insertAsLastChild(divFuentesExternas,pNoticia);
+        		}
+        		
+        		if(links[1].linkNoticia != "null"){
+	        		aNoticia = document.createElement("p");
+	        		pNoticia = document.createElement("a");
+	        		pNoticia.setAttribute("href",links[1].linkNoticia);
+	            	pNoticia.setAttribute("target","_blank");
+	        		pNoticia.innerHTML = links[1].linkNoticia;
+	        		insertAsLastChild(aNoticia,pNoticia);
+	        		insertAsLastChild(divFuentesExternas,aNoticia);     
+        		}
+        		
+        		divFuentesExternas = divFuentesExternas.nextElementSibling;
+            }
+            
+            //Fuentes externas no fiables
+            divFuentesExternas = $(".elpais");
+            for(var i = 8; i < responseAsJson.noticiaFuentesExternas.length && divFuentesExternas != null; i++){
             	var noticiaJson = responseAsJson.noticiaFuentesExternas[i];
             	var newHeader = document.createElement("h4");
             	newHeader.innerHTML = noticiaJson.fuenteNoticia;

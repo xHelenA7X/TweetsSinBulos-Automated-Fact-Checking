@@ -557,6 +557,26 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 	
 }
 
+[color="rojo"] {
+    color: #FF0000;
+    font-weight: bold;
+}
+
+[color="verde"] {
+    font-weight: bold;
+    color: #00DC3F;
+    
+}
+
+.fuenteExterna{
+	color: #0021C6;
+	font-weight: bold;
+}
+
+.e5{
+	color: #F68A00;
+}
+
 /*------------------------------------*\
 	Footer
 \*------------------------------------*/
@@ -833,20 +853,20 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 	to { -webkit-transform: rotate(360deg); transform: rotate(360deg);}
 }
 
-.maldita, .saludsinbulos, .vost, .snopes, .eldiario, .verificado, .chequeado, .aecc{
+.maldita, .saludsinbulos, .vost, .snopes, .eldiario, .verificado, .chequeado, .aecc, .elpais, .larazon, .elmundo{
 	margin-top: 40px;
 	margin-bottom: 50px;
 }
 
-.maldita > h4, .saludsinbulos > h4, .vost > h4, .snopes > h4, .eldiario > h4, .verificado > h4, .chequeado > h4, .aecc > h4{
+.maldita > h4, .saludsinbulos > h4, .vost > h4, .snopes > h4, .eldiario > h4, .verificado > h4, .chequeado > h4, .aecc > h4, .elpais > h4, .larazon > h4, .elmundo > h4{
 	color: #2AA500;
 }
  
-.maldita a, .saludsinbulos a, .vost a, .snopes a, .eldiario a, .verificado a, .chequeado a, .aecc a{
+.maldita a, .saludsinbulos a, .vost a, .snopes a, .eldiario a, .verificado a, .chequeado a, .aecc a, .elpais a, .larazon a, .elmundo a {
 	color: #EA7106
 }
 
-.maldita img, .vost img, .snopes img, .eldiario img, .verificado img, .chequeado img, .aecc img{
+.maldita img, .vost img, .snopes img, .eldiario img, .verificado img, .chequeado img, .aecc img {
 	margin-top: 20px;
 	margin-left: 30px;
 	width:70px;
@@ -861,6 +881,15 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
     height:100px;
     float: right;
 }
+
+.larazon img, .elpais img, .elmundo img{
+	marign-top: 20px;
+	margin-left: 40px;
+	width:100px;
+    height:100px;
+    float: right;
+}
+
 .nota-comunidad{
 	margin-top: 20px;
 }

@@ -20,7 +20,7 @@ public class CorpusFakeNews {
 	private List<KeywordsCorpus> keywords;
 	
 	public CorpusFakeNews() {
-		arrayDatosExcel = readExcelFileToArray(new File("/etc/tweets/corpus/CorpusFakeNews.xls")); 
+		arrayDatosExcel = readExcelFileToArray(new File("/etc/tweets/corpus/CorpusFakeNews2.xls")); 
 		keywords = new ArrayList<KeywordsCorpus>();
 	}
 	

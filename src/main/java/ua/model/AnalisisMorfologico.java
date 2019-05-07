@@ -51,6 +51,7 @@ public class AnalisisMorfologico {
 	private List<Integer> posAdverbios;
 	private List<Integer> posVerbos;
 	private List<Integer> posAdjetivos;
+	private List<Integer> posNombresComunes;
 	private List<String> verbosConjugados;
 	private List<String> verbosInfinitivo;
 	private List<String> nombresComunes;
@@ -93,6 +94,7 @@ public class AnalisisMorfologico {
 		posAdverbios = new ArrayList<Integer>();
 		posVerbos = new ArrayList<Integer>();
 		posAdjetivos = new ArrayList<Integer>();
+		posNombresComunes = new ArrayList<Integer>();
 		adverbiosAquitar = new ArrayList<String>();
 		verbosConjugados = new ArrayList<String>();
 		verbosInfinitivo = new ArrayList<String>();
@@ -111,6 +113,7 @@ public class AnalisisMorfologico {
 		String firmezaAdverbios = "afirma";
 		String firmezaVerbos = "afirma";
 		String firmezaAdjetivos = "afirma";
+		String firmezaNombresComunes = "afirma";
 		
 		for(int i = 0; i < adverbios.size(); i++) {
 			if(frase.contains(adverbios.get(i).getPalabra())) {
@@ -153,6 +156,19 @@ public class AnalisisMorfologico {
 			}
 		}
 		
+		if(frase.contains("bulo") || frase.contains("mentira")) {
+			String[] palabras = frase.split(" ");
+			for(int j = 0; j < palabras.length; j++) {
+				if(palabras[j].equals("bulo")) {
+					firmezaNombresComunes = "niega";
+				}
+				if(palabras[j].equals("mentira")) {
+					firmezaNombresComunes = "niega";
+				}
+			}
+		}
+		
+		
 		if(firmezaAdverbios.equals("niega") && firmezaVerbos.equals("afirma") ) {
     		firmeza = "niega";
     	}
@@ -169,6 +185,9 @@ public class AnalisisMorfologico {
     		firmeza = "niega";
     	}
     	if(firmezaAdverbios.equals("afirma") && firmezaAdjetivos.equals("niega")) {
+    		firmeza = "niega";
+    	}
+    	if(firmezaAdverbios.equals("afirma") && firmezaNombresComunes.equals("niega")) {
     		firmeza = "niega";
     	}
     	
@@ -211,6 +230,7 @@ public class AnalisisMorfologico {
 		String posicionAfirmacionAdverbio = "afirma";
 		String posicionAfirmacionVerbo = "afirma";
 		String posicionAfirmacionAdjetivo = "afirma";
+		String posicionAfirmacionNombreComun = "afirma";
 		String firmeza = "afirma";
 		
 		if(posVerbos.size() > 0) {
@@ -284,6 +304,28 @@ public class AnalisisMorfologico {
     		}
     	}
     	
+    	if(posNombresComunes.size() > 0) {
+    		Element nc = null;
+    		for(int j = 0; j < posNombresComunes.size(); j++) {	
+    			nc = (Element) tokens.get(posNombresComunes.get(j));
+	    		//Buscamos el adjetivo en la bd
+				String nc_str = nc.getAttributeValue("lemma").toLowerCase();
+				//Consulta a la bd
+				if(nc_str.equals("bulo") || nc_str.equals("mentira")) {
+					posicionAfirmacionNombreComun = "niega";
+					if(esSubordinada == -1) {
+						adverbiosAquitar.add(nc_str);
+					}
+					else {
+						if(esSegundaParte) {
+							adverbiosAquitar.add(nc_str);
+						}
+					}
+				}
+						
+    		}	
+    	}
+    	
     	if(posAdjetivos.size() > 0 && posAdverbios.size() > 0) {
     		if(posicionAfirmacionAdjetivo.equals("niega") && posicionAfirmacionAdverbio.equals("afirma")) {
         		firmeza = "niega";
@@ -300,7 +342,7 @@ public class AnalisisMorfologico {
         		firmeza = "niega";
         	}
     	}
-    	else {
+    	else if(posVerbos.size() > 0 && posNombresComunes.size() > 0){
 	    	if(posicionAfirmacionAdverbio.equals("niega") && posicionAfirmacionVerbo.equals("afirma")) {
 	    		firmeza = "niega";
 	    	}
@@ -308,6 +350,13 @@ public class AnalisisMorfologico {
 	    		firmeza = "niega";
 	    	}
     	}
+    	
+    	if(posicionAfirmacionNombreComun.equals("niega")) {
+    		if(posicionAfirmacionAdverbio.equals("afirma")) {
+    			firmeza = "niega";
+    		}
+    	}
+    	
     	return firmeza;
 	}
 	
@@ -315,9 +364,11 @@ public class AnalisisMorfologico {
 		List<Integer> posVerbos = new ArrayList<Integer>();
 		for(int i = 0; i < tokens.size(); i++) {
 			String pos = tokens.get(i).getAttributeValue("pos");
-			if(pos.equals("verb")) {
-	    		posVerbos.add(i);
-	    	}
+			if(pos != null) {
+				if(pos.equals("verb")) {
+		    		posVerbos.add(i);
+		    	}
+			}
 		}
 		return posVerbos;
 	}
@@ -326,9 +377,11 @@ public class AnalisisMorfologico {
 		List<Integer> posAdverbios = new ArrayList<Integer>();
 		for(int i = 0; i < tokens.size(); i++) {
 			String pos = tokens.get(i).getAttributeValue("pos");
-			if(pos.equals("adverb")) {
-	    		posAdverbios.add(i);
-	    	}
+			if(pos != null) {
+				if(pos.equals("adverb")) {
+		    		posAdverbios.add(i);
+		    	}
+			}
 		}
 		return posAdverbios;
 	}
@@ -337,31 +390,50 @@ public class AnalisisMorfologico {
 		List<Integer> posAdjetivos = new ArrayList<Integer>();
 		for(int i = 0; i < tokens.size(); i++) {
 			String pos = tokens.get(i).getAttributeValue("pos");
-			if(pos.equals("adjective")) {
-				posAdjetivos.add(i);
-	    	}
+			if(pos != null) {
+				if(pos.equals("adjective")) {
+					posAdjetivos.add(i);
+		    	}
+			}
 		}
 		return posAdjetivos;
+	}
+	
+	private List<Integer> anyadePosNombresComunes(List<Element> tokens){
+		List<Integer> posNombresComunes = new ArrayList<Integer>();
+		for(int i = 0; i < tokens.size(); i++) {
+			String pos = tokens.get(i).getAttributeValue("pos");
+			if(pos != null) {
+				if(pos.equals("noun")) {
+					posNombresComunes.add(i);
+		    	}
+			}
+		}
+		return posNombresComunes;
 	}
 	
 	private void esFraseSubordinada() { //Si es subordinada, nos interesa devolver la posicion en la que esta
 		esSubordinada=-1;
 		for(int i = 0; i < tokens.size(); i++) {
 			String tipo = tokens.get(i).getAttributeValue("type");
-			if(tipo.equals("subordinating")) {
-	    		esSubordinada=i;
-	    		break;
-	    	}
+			if(tipo != null) {
+				if(tipo.equals("subordinating")) {
+		    		esSubordinada=i;
+		    		break;
+		    	}
+			}
 		}
 	}
 	private void extraeFrase(List<Element> tokens) {
 		for(int i = 0; i < tokens.size(); i++) {
 			String palabra = tokens.get(i).getAttributeValue("form");
-			if(i == tokens.size()-1 || palabra.equals(",") || palabra.equals(".")) {
-				frase+=palabra;
-			}
-			else {
-				frase+=palabra + " "; 
+			if(palabra != null) {
+				if(i == tokens.size()-1 || palabra.equals(",") || palabra.equals(".")) {
+					frase+=palabra;
+				}
+				else {
+					frase+=palabra + " "; 
+				}
 			}
 		}
 	}
@@ -402,18 +474,18 @@ public class AnalisisMorfologico {
 			}
 			switch(tipoFrase) {
 			case 1: //Niega
-				conclusion = autorTweet + " niega que \"" + frase + ".\"";
+				conclusion = autorTweet + " niega que \"" + frase + "\"";
 				break;
 			case 2: //Niega
 				this.construirFraseSinAdverbiosNegativos();
-				conclusion = autorTweet + " niega que \"" + frase + ".\"";
+				conclusion = autorTweet + " niega que \"" + frase + "\"";
 				break;
 			case 3: //Afirma
-				conclusion = autorTweet + " afirma que \"" + frase + ".\"";
+				conclusion = autorTweet + " afirma que \"" + frase + "\"";
 				break;
 			case 4: //Afirma
 				this.construirFraseSinAdverbiosNegativos();
-				conclusion = autorTweet + " afirma que \"" + frase + ".\"";
+				conclusion = autorTweet + " afirma que \"" + frase + "\"";
 				break;
 			}
 		}
@@ -427,11 +499,11 @@ public class AnalisisMorfologico {
 			
 			switch(tipoFrase) {
 			case 1: //afirma	
-				conclusion = autorTweet + " afirma que \"" + frase + ".\"";
+				conclusion = autorTweet + " afirma que \"" + frase + "\"";
 				break;
 			case 2: //niega
 				this.construirFraseSinAdverbiosNegativos();
-				conclusion = autorTweet + " niega que \"" + frase + ".\"";
+				conclusion = autorTweet + " niega que \"" + frase + "\"";
 				break;
 			}
 		}
@@ -472,6 +544,8 @@ public class AnalisisMorfologico {
 		if(esSubordinada == -1) { //No estamos ante una frase subordinada, suponemos que es unico verbo
 	    	posVerbos = this.anyadePosVerbos(tokens);
 		    posAdverbios = this.anyadePosAdverbios(tokens);
+		    posAdjetivos = this.anyadePosAdjetivos(tokens);
+		    posNombresComunes = this.anyadePosNombresComunes(tokens);
 	    	firmeza = this.analisis(this.tokens,false);
 	    	if(firmeza.equals("afirma")) {tipoFrase=1;}else {tipoFrase=2;}
 	    	this.extraeFrase(this.tokens);
@@ -489,10 +563,12 @@ public class AnalisisMorfologico {
 	    	posVerbos = this.anyadePosVerbos(antes);
 		    posAdverbios = this.anyadePosAdverbios(antes);
 		    posAdjetivos = this.anyadePosAdjetivos(antes);
+		    posNombresComunes = this.anyadePosNombresComunes(antes);
 	    	String firmezaAntes = this.analisis(antes,false);
 	    	posVerbos = this.anyadePosVerbos(despues);
 	    	posAdverbios = this.anyadePosAdverbios(despues);
 	    	posAdjetivos = this.anyadePosAdjetivos(despues);
+	    	posNombresComunes = this.anyadePosNombresComunes(despues);
 	    	String firmezaDespues = this.analisis(despues,true);
 	    	
 	    	//Ej: Fuentes no confirman que el limón produzca cáncer. Niegan que + despues

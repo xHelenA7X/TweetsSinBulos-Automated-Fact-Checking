@@ -6,7 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>TweetCheck. Es lo que verdaderamente está pasando.</title>
+		<title>TweetsSinBulos. Es lo que verdaderamente está pasando.</title>
 
 		<!-- Google font -->
 		<link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
@@ -126,12 +126,11 @@
 									<p class="e6"></p>
 								</div>
 							</div>
-							
-														<!-- feature -->
+																		<!-- feature -->
 							<div class="feature">
 								<i class="feature-icon fa fa-fire"></i>
 								<div class="feature-content">
-									<h4>¿Qué dicen fuentes externas?</h4>
+									<h4>¿Qué dicen fuentes externas fiables?</h4>
 									<i>Nota: Las siguientes fuentes están supervisadas por expertos encargados
 									en desmontar y verificar noticias falsas, por lo que han sido categorizadas
 									como fuentes fiables.</i>
@@ -174,6 +173,31 @@
 									<div class="aecc">
 										<a href="https://www.aecc.es/es" target="_blank">
 											<img src="img/aecc-logo.jpg">
+										</a>
+									</div>
+								</div>
+							</div>
+							
+							<div class="feature">
+								<i class="feature-icon fa fa-exclamation-triangle"></i>
+								<div class="feature-content">
+									<h4>¿Qué dicen otras fuentes? (no verificadas)</h4>
+									<i>Nota: Las siguientes noticias NO están verificadas por expertos... ¡Que no te la cuelen!</i>
+									<div class="elpais">
+										<a href="https://elpais.com/" target="_blank">
+											<img src="img/el-pais.jpg">
+										</a>
+									</div>
+									
+									<div class="larazon">
+										<a href="https://larazon.es/" target="_blank">
+											<img src="img/la-razon.png">
+										</a>
+									</div>
+									
+									<div class="elmundo">
+										<a href="https://elmundo.es/" target="_blank">
+											<img src="img/el-mundo.jpg">
 										</a>
 									</div>
 								</div>
