@@ -31,7 +31,7 @@ Una vez hemos instalado freeling en nuestra máquina, lo ponemos desde la termin
 analyze -f es.cfg --outlv parsed --output xml --server --port 5000
 ```
 
-Para la base de datos requerimos de MySQL Server (cualquier versión sería válida). En mi caso utilizo en la configuración un usuario llamado 'helena' con contraseña '1234' y privilegios de root.
+Para la base de datos requerimos de MySQL Server (cualquier versión sería válida). En mi caso utilizo en la configuración un usuario llamado 'helena' con contraseña '1234' y privilegios de root. La base de datos ha de llamarse factchecking
 Podéis importar la base de datos, os dejo el siguiente enlace con los distintos archivos sql para importar las tablas y su contenido, además del corpus necesario:
 
 * [Base de datos y corpus](https://drive.google.com/file/d/1dcISfxWrE8eGFOp1JITH889Go69Jiqma/view?usp=sharing)
