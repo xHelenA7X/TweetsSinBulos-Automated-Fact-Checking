@@ -97,7 +97,7 @@ function JSON(){
 	            }
 	            else if(veracidad == "0.0"){
 	            	$(".e2").innerHTML = "Lo que dice el autor del tweet es <span class=\"conclusion\" color=\"rojo\">FALSO</span> .";	
-	            	$(".e3").innerHTML = "Dicha afirmación analizada ha sido catalogada por expertos como <span class=\"conclusion\" color=\"rojo\">FAKE NEW</span>.";
+	            	$(".e3").innerHTML = "Dicha afirmación analizada ha sido catalogada por expertos como <span class=\"conclusion\" color=\"rojo\">FAKE NEWS</span>.";
 					fin = "falsa";
 	            }
 	            

@@ -58,6 +58,19 @@ ul,ol{
     list-style: none
 }
 
+.titulo{
+	display: inline-block;
+	margin-left: 30px;
+	font-size: 50px;
+    border-radius: 24px 24px 24px 24px;
+	-moz-border-radius: 24px 24px 24px 24px;
+	-webkit-border-radius: 24px 24px 24px 24px;
+	border: 1px solid grey;
+	padding: 11px;
+	background-color: #3A83C3;
+	
+}
+
 .white-text {
 	color: #FFF;
 }
@@ -216,6 +229,7 @@ textarea {
 input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="number"]:focus, input[type="date"]:focus, input[type="url"]:focus, input[type="tel"]:focus, textarea:focus {
 	border-color:#FF6700;
 }
+
 
 /*------------------------------------*\
 	Logo
@@ -545,18 +559,6 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
 	margin-top:40px;
 }
 
-.titulo{
-	display: inline-block;
-	margin-left: 30px;
-	font-size: 66px;
-    border-radius: 24px 24px 24px 24px;
-	-moz-border-radius: 24px 24px 24px 24px;
-	-webkit-border-radius: 24px 24px 24px 24px;
-	border: 1px solid grey;
-	padding: 11px;
-	
-}
-
 [color="rojo"] {
     color: #FF0000;
     font-weight: bold;
@@ -705,6 +707,14 @@ input[type="text"]:focus, input[type="search"]:focus, input[type="email"]:focus,
      height: auto;
      margin-left:30px;
 	 margin-bottom: 70px;
+}
+
+.logo-comousar > img{
+	width: 25%;
+     height: auto;
+     margin-left:30px;
+	 margin-bottom: 70px;
+	 width: 250px; height: 250px;
 }
 
 /*------------------------------------*\

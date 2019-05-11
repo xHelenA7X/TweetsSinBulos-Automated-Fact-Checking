@@ -309,12 +309,15 @@ public class Tweet {
 	private void busquedaCorpusFakeNews() {
 		corpus = new CorpusFakeNews();
 		List<String> keywords = unirListas(analisis.getNombresComunes(), analisis.getNombresPropios());
-		
+		/**
+		if(analisis.getVerbosConjugados().size() > 0) {
+			keywords = unirListas(keywords, analisis.getVerbosConjugados());
+			keywords = unirListas(keywords, analisis.getVerbosInfinitivo());
+		}
+		**/
 		if(analisis.getAdjetivos().size()>0) {
 			keywords = unirListas(keywords,analisis.getAdjetivos());
 		}
-		
-		extraeKeywordsString(keywords);
 		
 		for(int i = 0; i < keywords.size(); i++) { //Busqueda de las keywords en el corpus
 			corpus.busquedaCorpusFakeNews(keywords.get(i));
@@ -405,6 +408,12 @@ public class Tweet {
 					}
 				}
 			}
+			keywords = unirListas(analisis.getNombresComunes(), analisis.getNombresPropios()); //Las keywords para realizar la busqueda en fuentes
+			//externas solo las queremos con nombres comunes, propios y adjetivos si existieran
+			if(analisis.getAdjetivos().size()>0) {
+				keywords = unirListas(keywords,analisis.getAdjetivos());
+			}
+			extraeKeywordsString(keywords);
 		}
 	}
 	

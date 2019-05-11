@@ -6,7 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>TweetsSinBulos. Es lo que verdaderamente está pasando.</title>
+		<title>Es lo que verdaderamente está pasando.</title>
 
 		<!-- Google font -->
 		<link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
@@ -48,11 +48,8 @@
 				<!-- Navigation -->
 				<nav id="nav">
 					<ul class="main-menu nav navbar-nav navbar-right">
-						<li><a href="index.html">Inicio</a></li>
-						<li><a href="#">Cómo usar</a></li>
-						<li><a href="#">Desarrolladora</a></li>
-						<li><a href="blog.html">Blog</a></li>
-						<li><a href="contact.html">Contact</a></li>
+						<li><a href="index.jsp">Inicio</a></li>
+						<li><a href="info.jsp">De qué trata</a></li>
 					</ul>
 				</nav>
 				<!-- /Navigation -->
@@ -63,7 +60,7 @@
 			<div id="cta" class="section">
 
 					<!-- Backgound Image -->
-					<div class="bg-image bg-parallax overlay" style="background-image:url(./img/libros.jpg)"></div>
+					<div class="bg-image bg-parallax overlay" style="background-image:url(./img/salida.jpeg)"></div>
 					<!-- /Backgound Image -->
 		
 					<!-- container -->
@@ -74,7 +71,6 @@
 		
 							<div class="col-md-6">
                                 <h2 class="white-text">Resultados</h2>
-								<a class="main-button icon-button" href="#">Si lo prefieres, consulta los resultados en modo texto.</a>
 							</div>
 		
 						</div>
@@ -244,20 +240,6 @@
 							</div>
 						</div>
 					</div>
-					<!-- footer logo -->
-
-					<!-- footer nav -->
-					<div class="col-md-6">
-						<ul class="footer-nav">
-							<li><a href="index.html">Home</a></li>
-							<li><a href="#">About</a></li>
-							<li><a href="#">Courses</a></li>
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
-					</div>
-					<!-- /footer nav -->
-
 				</div>
 				<!-- /row -->
 
@@ -267,11 +249,7 @@
 					<!-- social -->
 					<div class="col-md-4 col-md-push-8">
 						<ul class="footer-social">
-							<li><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a></li>
-							<li><a href="#" class="instagram"><i class="fa fa-instagram"></i></a></li>
-							<li><a href="#" class="youtube"><i class="fa fa-youtube"></i></a></li>
+							<li><a href="https://twitter.com/tweetssinbulos" class="twitter"><i class="fa fa-twitter"></i></a></li>
 							<li><a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a></li>
 						</ul>
 					</div>

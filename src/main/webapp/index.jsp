@@ -49,11 +49,8 @@
 				<!-- Navigation -->
 				<nav id="nav">
 					<ul class="main-menu nav navbar-nav navbar-right">
-						<li><a href="index.html">Inicio</a></li>
-						<li><a href="#">Cómo usar</a></li>
-						<li><a href="#">Desarrolladora</a></li>
-						<li><a href="blog.html">Blog</a></li>
-						<li><a href="contact.html">Contact</a></li>
+						<li><a href="index.jsp">Inicio</a></li>
+						<li><a href="info.jsp">De qué trata</a></li>
 					</ul>
 				</nav>
 				<!-- /Navigation -->
@@ -66,7 +63,7 @@
 		<div id="home" class="hero-area">
 
 			<!-- Backgound Image -->
-			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/bcktwitter.jpg)"></div>
+			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/background2.jpeg)"></div>
 			<!-- /Backgound Image -->
 
 			<div class="home-wrapper">
@@ -74,7 +71,7 @@
 					<div class="row">
 						<div class="col-md-8">
 							<img src="./img/pinocho-logo.png" alt="logo-pinocho">
-							<div class="white-text titulo"><p>TweetCheck<p></div>
+							<div class="white-text titulo">TweetsSinBulos</div>
 							<h1 class="white-text">Verifica tweets en tiempo real.</h1>
 							<div class="webdesigntuts-workshop">
 								<form method="POST" action='extraetweet'>		    
@@ -107,34 +104,14 @@
 							</div>
 						</div>
 					</div>
-					<!-- footer logo -->
-
-					<!-- footer nav -->
-					<div class="col-md-6">
-						<ul class="footer-nav">
-							<li><a href="index.html">Home</a></li>
-							<li><a href="#">About</a></li>
-							<li><a href="#">Courses</a></li>
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
-					</div>
-					<!-- /footer nav -->
-
 				</div>
-				<!-- /row -->
 
-				<!-- row -->
 				<div id="bottom-footer" class="row">
 
 					<!-- social -->
 					<div class="col-md-4 col-md-push-8">
 						<ul class="footer-social">
-							<li><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a></li>
-							<li><a href="#" class="instagram"><i class="fa fa-instagram"></i></a></li>
-							<li><a href="#" class="youtube"><i class="fa fa-youtube"></i></a></li>
+							<li><a href=https://twitter.com/tweetssinbulos class="twitter"><i class="fa fa-twitter"></i></a></li>
 							<li><a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a></li>
 						</ul>
 					</div>
