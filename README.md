@@ -2,6 +2,8 @@
 ## Helena Sánchez Jiménez. Universidad de Alicante.
 * Contacto: helenasj09@gmail.com
 * Info importante: En virtud de esta declaración afirmo que este trabajo es inédito y de mi autoría, por lo que me declaro propietaria del contenido, veracidad y alcance de este proyecto.
+
+
 ![alt text](https://github.com/xHelenA7X/tfg/blob/master/src/main/webapp/img/pinocho-logo.png)
 
 ## ¿Qué es Tweets Sin Bulos?
